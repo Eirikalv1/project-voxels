@@ -3,13 +3,7 @@ use bevy::{
     render::{mesh::Indices, render_resource::PrimitiveTopology},
 };
 
-fn to_3d(pos: usize, width: usize, height: usize) -> (usize, usize, usize) {
-    (pos % width, (pos / width) % height, pos / (width * height))
-}
-
-fn to_1d(x: usize, y: usize, z: usize, width: usize, height: usize) -> usize {
-    (z * width * height) + (y * width) + x
-}
+use crate::utils::{to_1d, to_3d};
 
 enum QuadSide {
     Top,
