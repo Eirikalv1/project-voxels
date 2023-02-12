@@ -145,19 +145,26 @@ impl VoxelBox {
             offset.z * voxel_box_size as f32,
         );
 
-
         if !(x + 1 < voxel_box_size
             && voxels.get(to_1d(x + 1, y, z, voxel_box_size, voxel_box_size)) == Some(&1))
         {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Right,
             ));
         }
 
         if !(x > 0 && voxels.get(to_1d(x - 1, y, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Left,
             ));
         }
@@ -166,14 +173,22 @@ impl VoxelBox {
             && voxels.get(to_1d(x, y + 1, z, voxel_box_size, voxel_box_size)) == Some(&1))
         {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Top,
             ));
         }
 
         if !(y > 0 && voxels.get(to_1d(x, y - 1, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Bottom,
             ));
         }
@@ -182,14 +197,22 @@ impl VoxelBox {
             && voxels.get(to_1d(x, y, z + 1, voxel_box_size, voxel_box_size)) == Some(&1))
         {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Front,
             ));
         }
 
         if !(z > 0 && voxels.get(to_1d(x, y, z - 1, voxel_box_size, voxel_box_size)) == Some(&1)) {
             quads.push(Quad::new(
-                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                Vec3::new(
+                    x as f32 + mod_offset.x,
+                    y as f32 + mod_offset.y,
+                    z as f32 + mod_offset.z,
+                ),
                 QuadSide::Back,
             ));
         }
@@ -224,5 +247,30 @@ impl From<VoxelBox> for Mesh {
         mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, uvs);
         mesh.set_indices(Some(Indices::U32(indices)));
         mesh
+    }
+}
+
+#[derive(Bundle)]
+pub struct VoxelBoxBundle {
+    pub voxel_box: PbrBundle,
+    pub name: Name,
+}
+
+impl VoxelBoxBundle {
+    pub fn new(
+        meshes: &mut ResMut<Assets<Mesh>>,
+        materials: &mut ResMut<Assets<StandardMaterial>>,
+        size: usize,
+        pos: Vec3,
+        color: Color,
+    ) -> Self {
+        VoxelBoxBundle {
+            voxel_box: PbrBundle {
+                mesh: meshes.add(VoxelBox::new(size, Vec3::new(pos.x, pos.y, pos.z)).into()),
+                material: materials.add(color.into()),
+                ..Default::default()
+            },
+            name: Name::new(format!("VoxelBox: [{:?}]", (pos.x, pos.y, pos.z))),
+        }
     }
 }
