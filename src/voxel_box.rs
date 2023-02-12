@@ -11,7 +11,7 @@ fn to_1d(x: usize, y: usize, z: usize, width: usize, height: usize) -> usize {
     (z * width * height) + (y * width) + x
 }
 
-pub enum QuadSide {
+enum QuadSide {
     Top,
     Bottom,
     Left,
@@ -20,9 +20,9 @@ pub enum QuadSide {
     Back,
 }
 
-pub struct Quad {
-    pub pos: Vec3,
-    pub quad_side: QuadSide,
+struct Quad {
+    pos: Vec3,
+    quad_side: QuadSide,
 }
 
 impl Quad {
@@ -99,11 +99,11 @@ impl QuadSide {
 pub struct VoxelBox {
     pub voxel_box_size: usize,
     pub voxels: Vec<usize>,
-    pub quads: Vec<Quad>,
+    quads: Vec<Quad>,
 }
 
 impl VoxelBox {
-    pub fn new(voxel_box_size: usize) -> Self {
+    pub fn new(voxel_box_size: usize, voxel_box_pos: Vec3) -> Self {
         let mut quads: Vec<Quad> = vec![];
         let voxels = vec![1; voxel_box_size * voxel_box_size * voxel_box_size];
 
@@ -111,7 +111,14 @@ impl VoxelBox {
             if *voxel == 1 {
                 let (x, y, z) = to_3d(pos, voxel_box_size, voxel_box_size);
 
-                quads.append(&mut Self::create_voxel(voxel_box_size, &voxels, x, y, z))
+                quads.append(&mut Self::create_voxel(
+                    voxel_box_size,
+                    &voxels,
+                    x,
+                    y,
+                    z,
+                    voxel_box_pos,
+                ))
             }
         }
 
@@ -128,33 +135,65 @@ impl VoxelBox {
         x: usize,
         y: usize,
         z: usize,
+        offset: Vec3,
     ) -> Vec<Quad> {
         let mut quads: Vec<Quad> = vec![];
-        
-        if !(x + 1 < voxel_box_size && voxels.get(to_1d(x + 1, y, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Right));
+
+        let mod_offset = Vec3::new(
+            offset.x * voxel_box_size as f32,
+            offset.y * voxel_box_size as f32,
+            offset.z * voxel_box_size as f32,
+        );
+
+
+        if !(x + 1 < voxel_box_size
+            && voxels.get(to_1d(x + 1, y, z, voxel_box_size, voxel_box_size)) == Some(&1))
+        {
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Right,
+            ));
         }
-    
+
         if !(x > 0 && voxels.get(to_1d(x - 1, y, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Left));
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Left,
+            ));
         }
-    
-        if !(y + 1 < voxel_box_size && voxels.get(to_1d(x, y + 1, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Top));
+
+        if !(y + 1 < voxel_box_size
+            && voxels.get(to_1d(x, y + 1, z, voxel_box_size, voxel_box_size)) == Some(&1))
+        {
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Top,
+            ));
         }
-    
+
         if !(y > 0 && voxels.get(to_1d(x, y - 1, z, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Bottom));
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Bottom,
+            ));
         }
-    
-        if !(z + 1 < voxel_box_size && voxels.get(to_1d(x, y, z + 1, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Front));
+
+        if !(z + 1 < voxel_box_size
+            && voxels.get(to_1d(x, y, z + 1, voxel_box_size, voxel_box_size)) == Some(&1))
+        {
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Front,
+            ));
         }
 
         if !(z > 0 && voxels.get(to_1d(x, y, z - 1, voxel_box_size, voxel_box_size)) == Some(&1)) {
-            quads.push(Quad::new(Vec3::new(x as f32, y as f32, z as f32), QuadSide::Back));
+            quads.push(Quad::new(
+                Vec3::new(x as f32 + mod_offset.x, y as f32 + mod_offset.y, z as f32 + mod_offset.z),
+                QuadSide::Back,
+            ));
         }
-       
+
         quads
     }
 }

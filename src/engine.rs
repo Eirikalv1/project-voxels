@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_flycam::PlayerPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::voxel;
+use crate::voxel_box::{self, VoxelBox};
 
 pub fn run() {
     App::new()
@@ -18,6 +18,11 @@ pub fn run() {
                 .with_system(spawn_box),
         )
         .run();
+}
+
+#[derive(Component)]
+struct VoxelBoxController {
+    voxel_boxes: Vec<VoxelBox>,
 }
 
 fn spawn_pointlight(mut commands: Commands) {
@@ -42,7 +47,27 @@ fn spawn_box(
     commands
         .spawn((
             PbrBundle {
-                mesh: meshes.add(voxel::VoxelBox::new(3).into()),
+                mesh: meshes.add(voxel_box::VoxelBox::new(3, Vec3::new(0., 0., 0.)).into()),
+                material: materials.add(Color::rgb(0.2, 0.4, 0.7).into()),
+                ..Default::default()
+            },
+            Wireframe,
+        ))
+        .insert(Name::new("Box"));
+    commands
+        .spawn((
+            PbrBundle {
+                mesh: meshes.add(voxel_box::VoxelBox::new(3, Vec3::new(2., -7., 3.)).into()),
+                material: materials.add(Color::rgb(0.2, 0.4, 0.7).into()),
+                ..Default::default()
+            },
+            Wireframe,
+        ))
+        .insert(Name::new("Box"));
+    commands
+        .spawn((
+            PbrBundle {
+                mesh: meshes.add(voxel_box::VoxelBox::new(3, Vec3::new(4., 5., 2.)).into()),
                 material: materials.add(Color::rgb(0.2, 0.4, 0.7).into()),
                 ..Default::default()
             },
