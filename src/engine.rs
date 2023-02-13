@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_flycam::PlayerPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::voxel_box::VoxelBoxBundle;
+use crate::voxels::chunk_controller::*;
 
 pub fn run() {
     App::new()
@@ -15,7 +15,7 @@ pub fn run() {
         .add_startup_system_set(
             SystemSet::new()
                 .with_system(spawn_pointlight)
-                .with_system(spawn_box),
+                .with_system(init),
         )
         .run();
 }
@@ -28,19 +28,17 @@ fn spawn_pointlight(mut commands: Commands) {
                 shadows_enabled: true,
                 ..default()
             },
-            transform: Transform::from_xyz(4.0, 8.0, 4.0),
+            transform: Transform::from_xyz(4.0, 6.0, 4.0),
             ..default()
         })
         .insert(Name::new("Light"));
 }
 
-fn spawn_box(
-    mut commands: Commands,
-    mut meshes: ResMut<Assets<Mesh>>,
-    mut materials: ResMut<Assets<StandardMaterial>>,
+fn init(
+    commands: Commands,
+    meshes: ResMut<Assets<Mesh>>,
+    materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    for i in 0..10 {
-        commands.spawn((VoxelBoxBundle::new(&mut meshes, &mut materials, 16, Vec3::new(1., i as f32, 4.), Color::rgb(0.7, 0.2, 0.2)), Wireframe));
-    }
-    
+    let mut controller = ChunkController::new();
+    controller.spawn_chunks(commands, meshes, materials);
 }
