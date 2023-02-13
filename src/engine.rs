@@ -1,4 +1,4 @@
-use bevy::pbr::wireframe::{Wireframe, WireframePlugin};
+use bevy::pbr::wireframe::WireframePlugin;
 use bevy::prelude::*;
 use bevy_flycam::PlayerPlugin;
 use bevy_inspector_egui::quick::WorldInspectorPlugin;

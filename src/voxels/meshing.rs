@@ -54,9 +54,9 @@ fn create_voxel(
     let mut quad_normals: Vec<[f32; 3]> = vec![];
     let mut quad_uvs: Vec<[f32; 2]> = vec![];
 
-    let min_x = pos.x + offset.x * CHUNK_SIZE;
-    let min_y = pos.y + offset.y * CHUNK_SIZE;
-    let min_z = pos.z + offset.z * CHUNK_SIZE;
+    let min_x = pos.x + offset.x * (CHUNK_SIZE - 1.);
+    let min_y = pos.y + offset.y * (CHUNK_SIZE - 1.);
+    let min_z = pos.z + offset.z * (CHUNK_SIZE - 1.);
 
     let max_x = min_x + 1.;
     let max_y = min_y + 1.;
