@@ -2,7 +2,6 @@ use bevy::prelude::*;
 
 use super::chunk::*;
 use super::terrain_gen::*;
-use crate::utils::*;
 
 pub struct ChunkController {
     pub chunks: Vec<Chunk>,
@@ -16,9 +15,18 @@ impl ChunkController {
             gen_terrain(Vec3::new(0., 0., 0.)),
             Vec3::new(0., 0., 0.),
         ));
-        chunks.push(Chunk::new(gen_terrain(Vec3::new(1., 0., 0.)), Vec3::new(1., 0., 0.)));
-        chunks.push(Chunk::new(gen_terrain(Vec3::new(1., 0., 1.)), Vec3::new(1., 0., 1.)));
-        chunks.push(Chunk::new(gen_terrain(Vec3::new(0., 0., 1.)), Vec3::new(0., 0., 1.)));
+        chunks.push(Chunk::new(
+            gen_terrain(Vec3::new(1., 0., 0.)),
+            Vec3::new(1., 0., 0.),
+        ));
+        chunks.push(Chunk::new(
+            gen_terrain(Vec3::new(1., 0., 1.)),
+            Vec3::new(1., 0., 1.),
+        ));
+        chunks.push(Chunk::new(
+            gen_terrain(Vec3::new(0., 0., 1.)),
+            Vec3::new(0., 0., 1.),
+        ));
 
         Self { chunks }
     }
