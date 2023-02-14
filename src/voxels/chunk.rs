@@ -1,6 +1,6 @@
 use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
-use crate::utils::CHUNK_SIZE_CUBED;
+use crate::utils::*;
 
 #[derive(PartialEq, Eq, Clone, Copy)]
 pub enum VoxelType {

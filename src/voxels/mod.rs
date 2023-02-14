@@ -3,3 +3,4 @@ pub mod meshing;
 
 mod chunk;
 mod helper_functions;
+mod terrain_gen;

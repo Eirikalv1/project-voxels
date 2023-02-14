@@ -6,6 +6,8 @@ use super::chunk::*;
 use super::helper_functions::*;
 use crate::utils::*;
 
+type VertexData = (Vec<[f32; 3]>, Vec<[f32; 3]>, Vec<[f32; 2]>);
+
 impl From<Chunk> for Mesh {
     fn from(chunk: Chunk) -> Self {
         let mut quad_poses: Vec<[f32; 3]> = vec![];
@@ -45,11 +47,7 @@ impl From<Chunk> for Mesh {
     }
 }
 
-fn create_voxel(
-    voxels: [VoxelType; CHUNK_SIZE_CUBED],
-    pos: Vec3,
-    offset: Vec3,
-) -> (Vec<[f32; 3]>, Vec<[f32; 3]>, Vec<[f32; 2]>) {
+fn create_voxel(voxels: [VoxelType; CHUNK_SIZE_CUBED], pos: Vec3, offset: Vec3) -> VertexData {
     let mut quad_poses: Vec<[f32; 3]> = vec![];
     let mut quad_normals: Vec<[f32; 3]> = vec![];
     let mut quad_uvs: Vec<[f32; 2]> = vec![];
