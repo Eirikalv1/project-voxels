@@ -1,14 +1,13 @@
 use bevy::prelude::*;
 use noise::{NoiseFn, OpenSimplex};
 
-use super::chunk::*;
 use crate::utils::*;
 
 const AMPLITUDE: f64 = 15.;
 const FREQUENCY: f64 = 10.;
 
-pub fn gen_terrain(world_pos: Vec3) -> [VoxelType; CHUNK_VOLUME] {
-    let mut chunk_data: [VoxelType; CHUNK_VOLUME] = [VoxelType::Air; CHUNK_VOLUME];
+pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
+    let mut chunk_data: ChunkData = [VoxelType::Air; CHUNK_VOLUME];
 
     let noise = OpenSimplex::new(0);
 

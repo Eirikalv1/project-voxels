@@ -2,12 +2,6 @@ use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
 use crate::utils::*;
 
-#[derive(PartialEq, Eq, Clone, Copy)]
-pub enum VoxelType {
-    Air,
-    Block,
-}
-
 #[derive(Clone, Copy)]
 pub struct Chunk {
     pub voxels: [VoxelType; CHUNK_VOLUME],
@@ -15,7 +9,7 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn new(voxels: [VoxelType; CHUNK_VOLUME], world_pos: Vec3) -> Self {
+    pub fn new(voxels: ChunkData, world_pos: Vec3) -> Self {
         Self { voxels, world_pos }
     }
 }

@@ -1,6 +1,5 @@
 use bevy::prelude::Vec3;
 
-use super::chunk::*;
 use crate::utils::*;
 
 pub fn voxel_to_right(pos3d: Vec3, voxels: [VoxelType; CHUNK_VOLUME]) -> bool {
