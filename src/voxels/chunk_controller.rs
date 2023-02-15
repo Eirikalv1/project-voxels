@@ -33,15 +33,15 @@ impl ChunkController {
 
     pub fn spawn_chunks(
         &mut self,
-        mut commands: Commands,
-        mut meshes: ResMut<Assets<Mesh>>,
-        mut materials: ResMut<Assets<StandardMaterial>>,
+        commands: &mut Commands,
+        meshes: &mut ResMut<Assets<Mesh>>,
+        materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
         for i in 0..self.chunks.len() {
             commands.spawn(ChunkBundle::new(
                 self.chunks[i],
-                &mut meshes,
-                &mut materials,
+                meshes,
+                materials,
             ));
         }
     }

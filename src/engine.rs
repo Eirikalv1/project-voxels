@@ -35,10 +35,10 @@ fn spawn_pointlight(mut commands: Commands) {
 }
 
 fn init(
-    commands: Commands,
-    meshes: ResMut<Assets<Mesh>>,
-    materials: ResMut<Assets<StandardMaterial>>,
+    mut commands: Commands,
+    mut meshes: ResMut<Assets<Mesh>>,
+    mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut controller = ChunkController::new();
-    controller.spawn_chunks(commands, meshes, materials);
+    controller.spawn_chunks(&mut commands, &mut meshes, &mut materials);
 }
