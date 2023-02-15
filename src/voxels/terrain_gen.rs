@@ -9,7 +9,7 @@ const FREQUENCY: f64 = 10.;
 pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
     let mut chunk_data: ChunkData = [VoxelType::Air; CHUNK_VOLUME];
 
-    let noise = OpenSimplex::new(0);
+    let noise = OpenSimplex::new(32);
 
     for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d as f32);

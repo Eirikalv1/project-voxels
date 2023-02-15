@@ -6,23 +6,28 @@ use super::chunk::*;
 use super::helper_functions::*;
 use crate::utils::*;
 
-type VertexData = (Vec<[f32; 3]>, Vec<[f32; 3]>, Vec<[f32; 2]>);
+type PositionData = Vec<[f32; 3]>;
+type NormalData = Vec<[f32; 3]>;
+type UvData = Vec<[f32; 2]>;
 
 impl From<Chunk> for Mesh {
     fn from(chunk: Chunk) -> Self {
-        let mut quad_poses: Vec<[f32; 3]> = vec![];
-        let mut quad_normals: Vec<[f32; 3]> = vec![];
-        let mut quad_uvs: Vec<[f32; 2]> = vec![];
+        let mut quad_poses: PositionData = vec![];
+        let mut quad_normals: NormalData = vec![];
+        let mut quad_uvs: UvData = vec![];
 
-        for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
-            if *voxel_type == VoxelType::Block {
-                let pos3d = to_3d(pos1d as f32);
-                let (mut voxel_quad_poses, mut voxel_quad_normals, mut voxel_quad_uvs) =
-                    create_voxel(chunk.voxels, pos3d, chunk.world_pos);
-
-                quad_poses.append(&mut voxel_quad_poses);
-                quad_normals.append(&mut voxel_quad_normals);
-                quad_uvs.append(&mut voxel_quad_uvs);
+        for quad in 0..6 {
+            for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
+                if *voxel_type == VoxelType::Block {
+                    let pos3d = to_3d(pos1d as f32);
+                    if should_create_quad(quad, chunk.voxels, pos3d) {
+                        let (mut quad_pos, mut quad_normal, mut quad_uv) =
+                            get_quad_data(quad, pos3d, chunk.world_pos);
+                        quad_poses.append(&mut quad_pos);
+                        quad_normals.append(&mut quad_normal);
+                        quad_uvs.append(&mut quad_uv);
+                    }
+                }
             }
         }
 
@@ -47,11 +52,23 @@ impl From<Chunk> for Mesh {
     }
 }
 
-fn create_voxel(voxels: [VoxelType; CHUNK_VOLUME], pos: Vec3, offset: Vec3) -> VertexData {
-    let mut quad_poses: Vec<[f32; 3]> = vec![];
-    let mut quad_normals: Vec<[f32; 3]> = vec![];
-    let mut quad_uvs: Vec<[f32; 2]> = vec![];
+fn should_create_quad(quad: usize, voxels: ChunkData, pos: Vec3) -> bool {
+    match quad {
+        0 => !voxel_to_right(pos, voxels),
+        1 => !voxel_to_left(pos, voxels),
+        2 => !voxel_to_top(pos, voxels),
+        3 => !voxel_to_bottom(pos, voxels),
+        4 => !voxel_to_front(pos, voxels),
+        5 => !voxel_to_back(pos, voxels),
+        _ => false,
+    }
+}
 
+fn get_quad_data(
+    quad: usize,
+    pos: Vec3,
+    offset: Vec3,
+) -> (PositionData, NormalData, UvData) {
     let min_x = pos.x + offset.x * (CHUNK_SIZE - 1.);
     let min_y = pos.y + offset.y * (CHUNK_SIZE - 1.);
     let min_z = pos.z + offset.z * (CHUNK_SIZE - 1.);
@@ -60,71 +77,67 @@ fn create_voxel(voxels: [VoxelType; CHUNK_VOLUME], pos: Vec3, offset: Vec3) -> V
     let max_y = min_y + 1.;
     let max_z = min_z + 1.;
 
-    if !(voxel_to_right(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [max_x, min_y, min_z],
-            [max_x, max_y, min_z],
-            [max_x, max_y, max_z],
-            [max_x, min_y, max_z],
-        ]);
-        quad_normals.append(&mut vec![[1., 0., 0.]; 4]);
-        quad_uvs.append(&mut vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]]);
+    match quad {
+        0 => (
+            vec![
+                [max_x, min_y, min_z],
+                [max_x, max_y, min_z],
+                [max_x, max_y, max_z],
+                [max_x, min_y, max_z],
+            ],
+            vec![[1., 0., 0.]; 4],
+            vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
+        ),
+        1 => (
+            vec![
+                [min_x, min_y, max_z],
+                [min_x, max_y, max_z],
+                [min_x, max_y, min_z],
+                [min_x, min_y, min_z],
+            ],
+            vec![[-1., 0., 0.]; 4],
+            vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
+        ),
+        2 => (
+            vec![
+                [max_x, max_y, min_z],
+                [min_x, max_y, min_z],
+                [min_x, max_y, max_z],
+                [max_x, max_y, max_z],
+            ],
+            vec![[0., 1., 0.]; 4],
+            vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
+        ),
+        3 => (
+            vec![
+                [max_x, min_y, max_z],
+                [min_x, min_y, max_z],
+                [min_x, min_y, min_z],
+                [max_x, min_y, min_z],
+            ],
+            vec![[0., -1., 0.]; 4],
+            vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
+        ),
+        4 => (
+            vec![
+                [min_x, min_y, max_z],
+                [max_x, min_y, max_z],
+                [max_x, max_y, max_z],
+                [min_x, max_y, max_z],
+            ],
+            vec![[0., 0., 1.]; 4],
+            vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
+        ),
+        5 => (
+            vec![
+                [min_x, max_y, min_z],
+                [max_x, max_y, min_z],
+                [max_x, min_y, min_z],
+                [min_x, min_y, min_z],
+            ],
+            vec![[0., 0., -1.]; 4],
+            vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
+        ),
+        _ => panic!("Quad indexing out of range"),
     }
-
-    if !(voxel_to_left(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [min_x, min_y, max_z],
-            [min_x, max_y, max_z],
-            [min_x, max_y, min_z],
-            [min_x, min_y, min_z],
-        ]);
-        quad_normals.append(&mut vec![[-1., 0., 0.]; 4]);
-        quad_uvs.append(&mut vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]]);
-    }
-
-    if !(voxel_to_top(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [max_x, max_y, min_z],
-            [min_x, max_y, min_z],
-            [min_x, max_y, max_z],
-            [max_x, max_y, max_z],
-        ]);
-        quad_normals.append(&mut vec![[0., 1., 0.]; 4]);
-        quad_uvs.append(&mut vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]]);
-    }
-
-    if !(voxel_to_bottom(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [max_x, min_y, max_z],
-            [min_x, min_y, max_z],
-            [min_x, min_y, min_z],
-            [max_x, min_y, min_z],
-        ]);
-        quad_normals.append(&mut vec![[0., -1., 0.]; 4]);
-        quad_uvs.append(&mut vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]]);
-    }
-
-    if !(voxel_to_front(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [min_x, min_y, max_z],
-            [max_x, min_y, max_z],
-            [max_x, max_y, max_z],
-            [min_x, max_y, max_z],
-        ]);
-        quad_normals.append(&mut vec![[0., 0., 1.]; 4]);
-        quad_uvs.append(&mut vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]]);
-    }
-
-    if !(voxel_to_back(pos, voxels)) {
-        quad_poses.append(&mut vec![
-            [min_x, max_y, min_z],
-            [max_x, max_y, min_z],
-            [max_x, min_y, min_z],
-            [min_x, min_y, min_z],
-        ]);
-        quad_normals.append(&mut vec![[0., 0., -1.]; 4]);
-        quad_uvs.append(&mut vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]]);
-    }
-
-    (quad_poses, quad_normals, quad_uvs)
 }
