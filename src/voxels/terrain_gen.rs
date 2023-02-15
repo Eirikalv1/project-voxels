@@ -7,12 +7,12 @@ use crate::utils::*;
 const AMPLITUDE: f64 = 15.;
 const FREQUENCY: f64 = 10.;
 
-pub fn gen_terrain(world_pos: Vec3) -> [VoxelType; CHUNK_SIZE_CUBED] {
-    let mut chunk_data: [VoxelType; CHUNK_SIZE_CUBED] = [VoxelType::Air; CHUNK_SIZE_CUBED];
+pub fn gen_terrain(world_pos: Vec3) -> [VoxelType; CHUNK_VOLUME] {
+    let mut chunk_data: [VoxelType; CHUNK_VOLUME] = [VoxelType::Air; CHUNK_VOLUME];
 
     let noise = OpenSimplex::new(0);
 
-    for pos1d in 0..CHUNK_SIZE_CUBED {
+    for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d as f32);
         let world_pos3d = pos3d + world_pos * CHUNK_SIZE;
 

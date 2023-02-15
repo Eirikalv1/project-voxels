@@ -10,12 +10,12 @@ pub enum VoxelType {
 
 #[derive(Clone, Copy)]
 pub struct Chunk {
-    pub voxels: [VoxelType; CHUNK_SIZE_CUBED],
+    pub voxels: [VoxelType; CHUNK_VOLUME],
     pub world_pos: Vec3,
 }
 
 impl Chunk {
-    pub fn new(voxels: [VoxelType; CHUNK_SIZE_CUBED], world_pos: Vec3) -> Self {
+    pub fn new(voxels: [VoxelType; CHUNK_VOLUME], world_pos: Vec3) -> Self {
         Self { voxels, world_pos }
     }
 }

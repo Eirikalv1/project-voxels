@@ -47,7 +47,7 @@ impl From<Chunk> for Mesh {
     }
 }
 
-fn create_voxel(voxels: [VoxelType; CHUNK_SIZE_CUBED], pos: Vec3, offset: Vec3) -> VertexData {
+fn create_voxel(voxels: [VoxelType; CHUNK_VOLUME], pos: Vec3, offset: Vec3) -> VertexData {
     let mut quad_poses: Vec<[f32; 3]> = vec![];
     let mut quad_normals: Vec<[f32; 3]> = vec![];
     let mut quad_uvs: Vec<[f32; 2]> = vec![];
