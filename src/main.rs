@@ -1,4 +1,4 @@
-use threed_bevy::engine;
+use project_voxels::engine;
 
 fn main() {
     engine::run();
