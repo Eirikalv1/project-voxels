@@ -7,9 +7,9 @@ const AMPLITUDE: f64 = 15.;
 const FREQUENCY: f64 = 10.;
 
 pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
-    let mut chunk_data: ChunkData = [VoxelType::Air; CHUNK_VOLUME];
+    let mut chunk_data: ChunkData = Box::new([VoxelType::Air; CHUNK_VOLUME]);
 
-    let noise = OpenSimplex::new(32);
+    let noise = OpenSimplex::new(2);
 
     for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d as f32);
@@ -23,7 +23,10 @@ pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
             + AMPLITUDE / 2.0) as i32;
 
         for y in 0..height {
-            chunk_data[to_1d(pos3d.x as f32, y as f32, pos3d.z as f32) as usize] = VoxelType::Block;
+            if chunk_data.get(to_1d(pos3d.x, y as f32, pos3d.z)).is_some() {
+                chunk_data[to_1d(pos3d.x, y as f32, pos3d.z)] =
+                    VoxelType::Block;
+            }
         }
     }
     chunk_data

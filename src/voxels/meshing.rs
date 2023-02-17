@@ -10,17 +10,17 @@ type PositionData = Vec<[f32; 3]>;
 type NormalData = Vec<[f32; 3]>;
 type UvData = Vec<[f32; 2]>;
 
-impl From<Chunk> for Mesh {
-    fn from(chunk: Chunk) -> Self {
+impl From<&Chunk> for Mesh {
+    fn from(chunk: &Chunk) -> Self {
         let mut quad_poses: PositionData = vec![];
         let mut quad_normals: NormalData = vec![];
         let mut quad_uvs: UvData = vec![];
 
-        for quad in 0..6 {
-            for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
-                if *voxel_type == VoxelType::Block {
+        for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
+            if *voxel_type == VoxelType::Block {
+                for quad in 0..6 {
                     let pos3d = to_3d(pos1d as f32);
-                    if should_create_quad(quad, chunk.voxels, pos3d) {
+                    if should_create_quad(quad, &chunk.voxels, pos3d) {
                         let (mut quad_pos, mut quad_normal, mut quad_uv) =
                             get_quad_data(quad, pos3d, chunk.world_pos);
                         quad_poses.append(&mut quad_pos);
@@ -32,7 +32,7 @@ impl From<Chunk> for Mesh {
         }
 
         let mut indices: Vec<u32> = vec![];
-        for quad in 0..(quad_poses.len()) {
+        for quad in 0..(quad_poses.len() / 4) {
             indices.append(&mut vec![
                 4 * quad as u32,
                 1 + 4 * quad as u32,
@@ -52,7 +52,7 @@ impl From<Chunk> for Mesh {
     }
 }
 
-fn should_create_quad(quad: usize, voxels: ChunkData, pos: Vec3) -> bool {
+fn should_create_quad(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
     match quad {
         0 => !voxel_to_right(pos, voxels),
         1 => !voxel_to_left(pos, voxels),
@@ -64,11 +64,7 @@ fn should_create_quad(quad: usize, voxels: ChunkData, pos: Vec3) -> bool {
     }
 }
 
-fn get_quad_data(
-    quad: usize,
-    pos: Vec3,
-    offset: Vec3,
-) -> (PositionData, NormalData, UvData) {
+fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, NormalData, UvData) {
     let min_x = pos.x + offset.x * (CHUNK_SIZE - 1.);
     let min_y = pos.y + offset.y * (CHUNK_SIZE - 1.);
     let min_z = pos.z + offset.z * (CHUNK_SIZE - 1.);

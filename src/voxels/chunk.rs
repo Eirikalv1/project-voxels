@@ -2,9 +2,9 @@ use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
 use crate::utils::*;
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct Chunk {
-    pub voxels: [VoxelType; CHUNK_VOLUME],
+    pub voxels: ChunkData,
     pub world_pos: Vec3,
 }
 
@@ -29,7 +29,7 @@ impl ChunkBundle {
     ) -> Self {
         Self {
             pbr_bundle: PbrBundle {
-                mesh: meshes.add(chunk.into()),
+                mesh: meshes.add((&chunk).into()),
                 material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
                 transform: Transform {
                     translation: chunk.world_pos,
