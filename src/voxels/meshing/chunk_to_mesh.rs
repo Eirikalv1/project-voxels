@@ -50,16 +50,16 @@ pub fn to_mesh(chunk: &Chunk, chunks: &HashMap<(usize, usize, usize), Chunk>) ->
     mesh
 }
 
-fn get_adjacent_chunk(pos3d: Vec3, chunks: HashMap<(usize, usize, usize), &Chunk>) -> [Chunk; 6] {
+fn get_adjacent_chunk(pos3d: Vec3, chunks: HashMap<(usize, usize, usize), &Chunk>) -> [&Chunk; 6] {
     let pos: (usize, usize, usize) = (pos3d.x as usize, pos3d.y as usize, pos3d.z as usize);
 
     [
-        chunks[&(pos.0 + 1, pos.1, pos.2)].clone(),
-        chunks[&(pos.0 - 1, pos.1, pos.2)].clone(),
-        chunks[&(pos.0, pos.1 + 1, pos.2)].clone(),
-        chunks[&(pos.0, pos.1 - 1, pos.2)].clone(),
-        chunks[&(pos.0, pos.1, pos.2 + 1)].clone(),
-        chunks[&(pos.0, pos.1, pos.2 - 1)].clone(),
+        chunks[&(pos.0 + 1, pos.1, pos.2)],
+        chunks[&(pos.0 - 1, pos.1, pos.2)],
+        chunks[&(pos.0, pos.1 + 1, pos.2)],
+        chunks[&(pos.0, pos.1 - 1, pos.2)],
+        chunks[&(pos.0, pos.1, pos.2 + 1)],
+        chunks[&(pos.0, pos.1, pos.2 - 1)],
     ]
 }
 
