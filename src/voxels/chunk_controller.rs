@@ -28,7 +28,7 @@ impl ChunkController {
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
         for i in 0..self.chunks.len() {
-            commands.spawn(ChunkBundle::new(self.chunks[i].clone(), meshes, materials));
+            commands.spawn(ChunkBundle::new(&self.chunks[i], meshes, materials));
         }
     }
 }

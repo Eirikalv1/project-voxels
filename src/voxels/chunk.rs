@@ -23,13 +23,13 @@ pub struct ChunkBundle {
 
 impl ChunkBundle {
     pub fn new(
-        chunk: Chunk,
+        chunk: &Chunk,
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) -> Self {
         Self {
             pbr_bundle: PbrBundle {
-                mesh: meshes.add((&chunk).into()),
+                mesh: meshes.add(chunk.into()),
                 material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
                 transform: Transform {
                     translation: chunk.world_pos,
