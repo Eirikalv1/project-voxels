@@ -8,7 +8,7 @@ use super::helper_functions::*;
 use crate::utils::*;
 use crate::voxels::chunk::*;
 
-pub fn to_mesh(chunk: &Chunk, chunks: HashMap<(usize, usize, usize), Chunk>) -> Mesh {
+pub fn to_mesh(chunk: &Chunk, chunks: &HashMap<(usize, usize, usize), Chunk>) -> Mesh {
     let mut quad_poses: PositionData = vec![];
     let mut quad_normals: NormalData = vec![];
     let mut quad_uvs: UvData = vec![];
