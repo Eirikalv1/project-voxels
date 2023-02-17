@@ -1,6 +1,9 @@
+use std::collections::HashMap;
+
 use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
 use crate::utils::*;
+use super::meshing::chunk_to_mesh::to_mesh;
 
 #[derive(Clone)]
 pub struct Chunk {
@@ -24,12 +27,13 @@ pub struct ChunkBundle {
 impl ChunkBundle {
     pub fn new(
         chunk: &Chunk,
+        loaded_chunks: &HashMap<(usize, usize, usize), Chunk>,
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) -> Self {
         Self {
             pbr_bundle: PbrBundle {
-                mesh: meshes.add(chunk.into()),
+                mesh: meshes.add(to_mesh(chunk, loaded_chunks)),
                 material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
                 transform: Transform {
                     translation: chunk.world_pos,
