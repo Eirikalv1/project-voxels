@@ -10,14 +10,13 @@ pub struct ChunkController {
 impl ChunkController {
     pub fn new() -> Self {
         let mut chunks: Vec<Chunk> = vec![];
-        let size = 16;
+        let size = 2;
         for i in 0..(size * size) {
             chunks.push(Chunk::new(
-                gen_terrain(Vec3::new((i%size) as f32, 0., (i/size) as f32)),
-                Vec3::new((i%size) as f32, 0., (i/size) as f32),
+                gen_terrain(Vec3::new((i % size) as f32, 0., (i / size) as f32)),
+                Vec3::new((i % size) as f32, 0., (i / size) as f32),
             ));
         }
-        
 
         Self { chunks }
     }

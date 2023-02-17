@@ -1,6 +1,6 @@
 use bevy::prelude::Vec3;
 
-pub const CHUNK_SIZE: f32 = 32.0;
+pub const CHUNK_SIZE: f32 = 22.0;
 pub const CHUNK_VOLUME: usize = (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) as usize;
 
 pub type ChunkData = Box<[VoxelType; CHUNK_VOLUME]>;
