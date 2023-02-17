@@ -17,7 +17,7 @@ impl From<&Chunk> for Mesh {
                 for quad in 0..6 {
                     let pos3d = to_3d(pos1d as f32);
                     if should_create_quad(quad, &chunk.voxels, pos3d)
-                        //&& !quad_outside_chunk(quad, pos3d)
+                    //&& !quad_outside_chunk(quad, pos3d)
                     {
                         let (mut quad_pos, mut quad_normal, mut quad_uv) =
                             get_quad_data(quad, pos3d, chunk.world_pos);
@@ -50,7 +50,7 @@ impl From<&Chunk> for Mesh {
     }
 }
 
-/* 
+/*
 fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
     match quad {
         0 => pos3d.x == CHUNK_SIZE - 1.,

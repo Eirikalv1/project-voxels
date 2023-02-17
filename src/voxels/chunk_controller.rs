@@ -1,21 +1,26 @@
+use std::collections::HashMap;
+
 use bevy::prelude::*;
 
 use super::chunk::*;
 use super::terrain_gen::*;
 
 pub struct ChunkController {
-    pub chunks: Vec<Chunk>,
+    pub chunks: HashMap<(usize, usize, usize), Chunk>,
 }
 
 impl ChunkController {
     pub fn new() -> Self {
-        let mut chunks: Vec<Chunk> = vec![];
+        let mut chunks: HashMap<(usize, usize, usize), Chunk> = HashMap::new();
         let size = 2;
         for i in 0..(size * size) {
-            chunks.push(Chunk::new(
-                gen_terrain(Vec3::new((i % size) as f32, 0., (i / size) as f32)),
-                Vec3::new((i % size) as f32, 0., (i / size) as f32),
-            ));
+            chunks.insert(
+                (i % size, 0, i / size),
+                Chunk::new(
+                    gen_terrain(Vec3::new((i % size) as f32, 0., (i / size) as f32)),
+                    Vec3::new((i % size) as f32, 0., (i / size) as f32),
+                ),
+            );
         }
 
         Self { chunks }
@@ -27,8 +32,8 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        for i in 0..self.chunks.len() {
-            commands.spawn(ChunkBundle::new(&self.chunks[i], meshes, materials));
+        for (_, chunk) in self.chunks.iter() {
+            commands.spawn(ChunkBundle::new(&chunk, meshes, materials));
         }
     }
 }
