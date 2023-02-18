@@ -14,12 +14,27 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
         if *voxel_type == VoxelType::Block {
             for quad in 0..6 {
-                let pos3d = to_3d(pos1d as f32);
-                if should_create_quad(quad, &chunk.voxels, pos3d)
-                //&& !quad_outside_chunk(quad, pos3d)
-                {
+                let mut pos3d = to_3d(pos1d);
+                let mut world_pos = chunk.world_pos;
+                let mut should_create_quad = false;
+
+                if quad_is_visible(quad, &chunk.voxels, pos3d) && !quad_outside_chunk(quad, pos3d) {
+                    should_create_quad = true;
+                }
+                if quad_outside_chunk(quad, pos3d) && adjacent_chunks[quad].is_some() {
+                    let adjacent_chunk = adjacent_chunks[quad].unwrap();
+
+                    if adjacent_chunk.voxels[adjacent_quad_to_1d(quad, pos3d)] == VoxelType::Air {
+                        should_create_quad = true;
+                        if quad % 2 != 0 {
+                            pos3d = to_3d(adjacent_quad_to_1d(quad, pos3d));
+                            world_pos = adjacent_chunk.world_pos;
+                        }
+                    }
+                }
+                if should_create_quad {
                     let (mut quad_pos, mut quad_normal, mut quad_uv) =
-                        get_quad_data(quad, pos3d, chunk.world_pos);
+                        get_quad_data(quad, pos3d, world_pos);
                     quad_poses.append(&mut quad_pos);
                     quad_normals.append(&mut quad_normal);
                     quad_uvs.append(&mut quad_uv);
@@ -48,18 +63,3 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     mesh
 }
 
-
-
-/*
-fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
-    match quad {
-        0 => pos3d.x == CHUNK_SIZE - 1.,
-        1 => pos3d.x == 0.,
-        2 => pos3d.y == CHUNK_SIZE - 1.,
-        3 => pos3d.y == 0.,
-        4 => pos3d.z == CHUNK_SIZE - 1.,
-        5 => pos3d.z == 0.,
-        _ => false,
-    }
-}
-*/

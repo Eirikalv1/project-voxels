@@ -1,7 +1,7 @@
 use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
-use crate::utils::*;
 use super::meshing::chunk_to_mesh::to_mesh;
+use crate::utils::*;
 
 #[derive(Clone)]
 pub struct Chunk {

@@ -1,6 +1,6 @@
 use bevy::prelude::Vec3;
 
-pub const CHUNK_SIZE: f32 = 22.0;
+pub const CHUNK_SIZE: f32 = 32.0;
 pub const CHUNK_VOLUME: usize = (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) as usize;
 
 pub type ChunkData = Box<[VoxelType; CHUNK_VOLUME]>;
@@ -11,11 +11,11 @@ pub enum VoxelType {
     Block,
 }
 
-pub fn to_3d(pos: f32) -> Vec3 {
+pub fn to_3d(pos: usize) -> Vec3 {
     Vec3::new(
-        pos % CHUNK_SIZE,
-        ((pos / CHUNK_SIZE) as i32 % CHUNK_SIZE as i32) as f32,
-        (pos / (CHUNK_SIZE * CHUNK_SIZE)) as i32 as f32,
+        pos as f32 % CHUNK_SIZE,
+        ((pos as f32 / CHUNK_SIZE) as i32 % CHUNK_SIZE as i32) as f32,
+        (pos as f32 / (CHUNK_SIZE * CHUNK_SIZE)) as i32 as f32,
     )
 }
 

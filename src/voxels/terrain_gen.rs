@@ -3,16 +3,16 @@ use noise::{NoiseFn, OpenSimplex};
 
 use crate::utils::*;
 
-const AMPLITUDE: f64 = 15.;
+const AMPLITUDE: f64 = 20.;
 const FREQUENCY: f64 = 10.;
 
 pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
     let mut chunk_data: ChunkData = Box::new([VoxelType::Air; CHUNK_VOLUME]);
 
-    let noise = OpenSimplex::new(2);
+    let noise = OpenSimplex::new(0);
 
     for pos1d in 0..CHUNK_VOLUME {
-        let pos3d = to_3d(pos1d as f32);
+        let pos3d = to_3d(pos1d);
         let world_pos3d = pos3d + world_pos * CHUNK_SIZE;
 
         let height = (noise.get([

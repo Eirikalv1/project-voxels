@@ -33,7 +33,7 @@ pub fn voxel_to_back(pos3d: Vec3, voxels: &ChunkData) -> bool {
     pos3d.z > 0. && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelType::Block)
 }
 
-pub fn should_create_quad(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
+pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
     match quad {
         0 => !voxel_to_right(pos, voxels),
         1 => !voxel_to_left(pos, voxels),
@@ -115,6 +115,30 @@ pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, Nor
             vec![[0., 0., -1.]; 4],
             vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
         ),
+        _ => panic!("Quad indexing out of range"),
+    }
+}
+
+pub fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
+    match quad {
+        0 => pos3d.x == CHUNK_SIZE - 1.,
+        1 => pos3d.x == 0.,
+        2 => pos3d.y == CHUNK_SIZE - 1.,
+        3 => pos3d.y == 0.,
+        4 => pos3d.z == CHUNK_SIZE - 1.,
+        5 => pos3d.z == 0.,
+        _ => false,
+    }
+}
+
+pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
+    match quad {
+        0 => to_1d(pos3d.x - CHUNK_SIZE + 1., pos3d.y, pos3d.z),
+        1 => to_1d(pos3d.x + CHUNK_SIZE - 1., pos3d.y, pos3d.z),
+        2 => to_1d(pos3d.x, pos3d.y - CHUNK_SIZE + 1., pos3d.z),
+        3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE - 1., pos3d.z),
+        4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE + 1.),
+        5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE - 1.),
         _ => panic!("Quad indexing out of range"),
     }
 }

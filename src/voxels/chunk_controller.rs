@@ -12,7 +12,7 @@ pub struct ChunkController {
 impl ChunkController {
     pub fn new() -> Self {
         let mut loaded_chunks: HashMap<(i32, i32, i32), Chunk> = HashMap::new();
-        let size = 2;
+        let size = 4;
         for i in 0..(size * size) {
             loaded_chunks.insert(
                 (i % size, 0, i / size),
@@ -44,7 +44,7 @@ impl ChunkController {
 
     fn get_adjacent_chunk(&self, pos3d: Vec3) -> [Option<&Chunk>; 6] {
         let pos: (i32, i32, i32) = (pos3d.x as i32, pos3d.y as i32, pos3d.z as i32);
-        
+
         [
             self.loaded_chunks.get(&(pos.0 + 1, pos.1, pos.2)),
             self.loaded_chunks.get(&(pos.0 - 1, pos.1, pos.2)),
