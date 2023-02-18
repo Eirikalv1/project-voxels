@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use bevy::{pbr::wireframe::Wireframe, prelude::*};
 
 use crate::utils::*;
@@ -27,13 +25,13 @@ pub struct ChunkBundle {
 impl ChunkBundle {
     pub fn new(
         chunk: &Chunk,
-        loaded_chunks: &HashMap<(usize, usize, usize), Chunk>,
+        adjacent_chunks: [Option<&Chunk>; 6],
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) -> Self {
         Self {
             pbr_bundle: PbrBundle {
-                mesh: meshes.add(to_mesh(chunk, loaded_chunks)),
+                mesh: meshes.add(to_mesh(chunk, adjacent_chunks)),
                 material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
                 transform: Transform {
                     translation: chunk.world_pos,

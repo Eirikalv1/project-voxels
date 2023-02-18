@@ -1,5 +1,3 @@
-use std::collections::HashMap;
-
 use bevy::prelude::*;
 use bevy::render::mesh::Indices;
 use bevy::render::render_resource::PrimitiveTopology;
@@ -8,7 +6,7 @@ use super::helper_functions::*;
 use crate::utils::*;
 use crate::voxels::chunk::*;
 
-pub fn to_mesh(chunk: &Chunk, chunks: &HashMap<(usize, usize, usize), Chunk>) -> Mesh {
+pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_poses: PositionData = vec![];
     let mut quad_normals: NormalData = vec![];
     let mut quad_uvs: UvData = vec![];
@@ -50,18 +48,7 @@ pub fn to_mesh(chunk: &Chunk, chunks: &HashMap<(usize, usize, usize), Chunk>) ->
     mesh
 }
 
-fn get_adjacent_chunk(pos3d: Vec3, chunks: HashMap<(usize, usize, usize), &Chunk>) -> [&Chunk; 6] {
-    let pos: (usize, usize, usize) = (pos3d.x as usize, pos3d.y as usize, pos3d.z as usize);
 
-    [
-        chunks[&(pos.0 + 1, pos.1, pos.2)],
-        chunks[&(pos.0 - 1, pos.1, pos.2)],
-        chunks[&(pos.0, pos.1 + 1, pos.2)],
-        chunks[&(pos.0, pos.1 - 1, pos.2)],
-        chunks[&(pos.0, pos.1, pos.2 + 1)],
-        chunks[&(pos.0, pos.1, pos.2 - 1)],
-    ]
-}
 
 /*
 fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {

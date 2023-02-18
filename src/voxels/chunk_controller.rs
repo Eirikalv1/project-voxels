@@ -4,15 +4,14 @@ use bevy::prelude::*;
 
 use super::chunk::*;
 use super::terrain_gen::*;
-use crate::utils::*;
 
 pub struct ChunkController {
-    pub loaded_chunks: HashMap<(usize, usize, usize), Chunk>,
+    pub loaded_chunks: HashMap<(i32, i32, i32), Chunk>,
 }
 
 impl ChunkController {
     pub fn new() -> Self {
-        let mut loaded_chunks: HashMap<(usize, usize, usize), Chunk> = HashMap::new();
+        let mut loaded_chunks: HashMap<(i32, i32, i32), Chunk> = HashMap::new();
         let size = 2;
         for i in 0..(size * size) {
             loaded_chunks.insert(
@@ -28,18 +27,31 @@ impl ChunkController {
     }
 
     pub fn spawn_chunks(
-        &mut self,
+        &self,
         commands: &mut Commands,
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        for (_, chunk) in self.loaded_chunks.iter() {
+        for (pos3d, chunk) in self.loaded_chunks.iter() {
             commands.spawn(ChunkBundle::new(
                 &chunk,
-                &self.loaded_chunks,
+                self.get_adjacent_chunk(Vec3::new(pos3d.0 as f32, pos3d.1 as f32, pos3d.2 as f32)),
                 meshes,
                 materials,
             ));
         }
+    }
+
+    fn get_adjacent_chunk(&self, pos3d: Vec3) -> [Option<&Chunk>; 6] {
+        let pos: (i32, i32, i32) = (pos3d.x as i32, pos3d.y as i32, pos3d.z as i32);
+        
+        [
+            self.loaded_chunks.get(&(pos.0 + 1, pos.1, pos.2)),
+            self.loaded_chunks.get(&(pos.0 - 1, pos.1, pos.2)),
+            self.loaded_chunks.get(&(pos.0, pos.1 + 1, pos.2)),
+            self.loaded_chunks.get(&(pos.0, pos.1 - 1, pos.2)),
+            self.loaded_chunks.get(&(pos.0, pos.1, pos.2 + 1)),
+            self.loaded_chunks.get(&(pos.0, pos.1, pos.2 - 1)),
+        ]
     }
 }
