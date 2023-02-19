@@ -119,7 +119,7 @@ pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, Nor
     }
 }
 
-pub fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
+pub fn get_quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
     match quad {
         0 => pos3d.x == CHUNK_SIZE_MINUS_ONE,
         1 => pos3d.x == 0.,

@@ -18,16 +18,19 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
                 let mut world_pos = chunk.world_pos;
                 let mut should_create_quad = false;
 
-                if quad_is_visible(quad, &chunk.voxels, pos3d) && !quad_outside_chunk(quad, pos3d) {
+                let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
+
+                if quad_is_visible(quad, &chunk.voxels, pos3d) && !quad_outside_chunk {
                     should_create_quad = true;
                 }
-                if quad_outside_chunk(quad, pos3d) && adjacent_chunks[quad].is_some() {
+                if quad_outside_chunk && adjacent_chunks[quad].is_some() {
                     let adjacent_chunk = adjacent_chunks[quad].unwrap();
 
-                    if adjacent_chunk.voxels[adjacent_quad_to_1d(quad, pos3d)] == VoxelType::Air {
+                    let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
+                    if adjacent_chunk.voxels[adjacent_quad_1d] == VoxelType::Air {
                         should_create_quad = true;
                         if quad % 2 != 0 {
-                            pos3d = to_3d(adjacent_quad_to_1d(quad, pos3d));
+                            pos3d = to_3d(adjacent_quad_1d);
                             world_pos = adjacent_chunk.world_pos;
                         }
                     }
