@@ -39,6 +39,10 @@ fn init(
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let controller = ChunkController::new();
-    controller.spawn_chunks(&mut commands, &mut meshes, &mut materials);
+    let mut controller = ChunkController::new();
+
+    controller.load_chunk((0, 0, 0), &mut commands, &mut meshes, &mut materials);
+    controller.load_chunk((1, 0, 0), &mut commands, &mut meshes, &mut materials);
+    controller.load_chunk((0, 0, 1), &mut commands, &mut meshes, &mut materials);
+    controller.load_chunk((2, 0, 0), &mut commands, &mut meshes, &mut materials);
 }

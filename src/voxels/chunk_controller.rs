@@ -2,6 +2,8 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
+use crate::utils::tuple_to_vec3;
+
 use super::chunk::*;
 use super::terrain_gen::*;
 
@@ -11,35 +13,27 @@ pub struct ChunkController {
 
 impl ChunkController {
     pub fn new() -> Self {
-        let mut loaded_chunks: HashMap<(i32, i32, i32), Chunk> = HashMap::new();
-        let size = 4;
-        for i in 0..(size * size) {
-            loaded_chunks.insert(
-                (i % size, 0, i / size),
-                Chunk::new(
-                    gen_terrain(Vec3::new((i % size) as f32, 0., (i / size) as f32)),
-                    Vec3::new((i % size) as f32, 0., (i / size) as f32),
-                ),
-            );
-        }
+        let loaded_chunks: HashMap<(i32, i32, i32), Chunk> = HashMap::new();
 
         Self { loaded_chunks }
     }
 
-    pub fn spawn_chunks(
-        &self,
+    pub fn load_chunk(
+        &mut self,
+        pos: (i32, i32, i32),
         commands: &mut Commands,
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        for (pos3d, chunk) in self.loaded_chunks.iter() {
-            commands.spawn(ChunkBundle::new(
-                &chunk,
-                self.get_adjacent_chunk(Vec3::new(pos3d.0 as f32, pos3d.1 as f32, pos3d.2 as f32)),
-                meshes,
-                materials,
-            ));
-        }
+        let chunk = Chunk::new(gen_terrain(tuple_to_vec3(pos)), tuple_to_vec3(pos));
+        self.loaded_chunks.insert(pos, chunk);
+
+        commands.spawn(ChunkBundle::new(
+            &self.loaded_chunks[&pos],
+            self.get_adjacent_chunk(tuple_to_vec3(pos)),
+            meshes,
+            materials,
+        ));
     }
 
     fn get_adjacent_chunk(&self, pos3d: Vec3) -> [Option<&Chunk>; 6] {
