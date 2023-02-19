@@ -46,9 +46,9 @@ pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
 }
 
 pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, NormalData, UvData) {
-    let min_x = pos.x + offset.x * (CHUNK_SIZE - 1.);
-    let min_y = pos.y + offset.y * (CHUNK_SIZE - 1.);
-    let min_z = pos.z + offset.z * (CHUNK_SIZE - 1.);
+    let min_x = pos.x + offset.x * CHUNK_SIZE_MINUS_ONE;
+    let min_y = pos.y + offset.y * CHUNK_SIZE_MINUS_ONE;
+    let min_z = pos.z + offset.z * CHUNK_SIZE_MINUS_ONE;
 
     let max_x = min_x + 1.;
     let max_y = min_y + 1.;
@@ -121,11 +121,11 @@ pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, Nor
 
 pub fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
     match quad {
-        0 => pos3d.x == CHUNK_SIZE - 1.,
+        0 => pos3d.x == CHUNK_SIZE_MINUS_ONE,
         1 => pos3d.x == 0.,
-        2 => pos3d.y == CHUNK_SIZE - 1.,
+        2 => pos3d.y == CHUNK_SIZE_MINUS_ONE,
         3 => pos3d.y == 0.,
-        4 => pos3d.z == CHUNK_SIZE - 1.,
+        4 => pos3d.z == CHUNK_SIZE_MINUS_ONE,
         5 => pos3d.z == 0.,
         _ => false,
     }
@@ -133,12 +133,12 @@ pub fn quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
 
 pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
     match quad {
-        0 => to_1d(pos3d.x - CHUNK_SIZE + 1., pos3d.y, pos3d.z),
-        1 => to_1d(pos3d.x + CHUNK_SIZE - 1., pos3d.y, pos3d.z),
-        2 => to_1d(pos3d.x, pos3d.y - CHUNK_SIZE + 1., pos3d.z),
-        3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE - 1., pos3d.z),
-        4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE + 1.),
-        5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE - 1.),
+        0 => to_1d(pos3d.x - CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
+        1 => to_1d(pos3d.x + CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
+        2 => to_1d(pos3d.x, pos3d.y - CHUNK_SIZE_MINUS_ONE, pos3d.z),
+        3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE_MINUS_ONE, pos3d.z),
+        4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE_MINUS_ONE),
+        5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE_MINUS_ONE),
         _ => panic!("Quad indexing out of range"),
     }
 }
