@@ -23,3 +23,11 @@ pub fn to_3d(pos: usize) -> Vec3 {
 pub fn to_1d(x: f32, y: f32, z: f32) -> usize {
     ((z * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + x) as usize
 }
+
+pub fn tuple_to_vec3(pos: (i32, i32, i32)) -> Vec3 {
+    Vec3::new(pos.0 as f32, pos.1 as f32, pos.2 as f32)
+}
+
+pub fn vec3_to_tuple(pos: Vec3) -> (i32, i32, i32) {
+    (pos.x as i32, pos.y as i32, pos.z as i32)
+}
