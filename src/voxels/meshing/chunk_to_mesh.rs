@@ -13,7 +13,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
 
     for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
         if *voxel_type == VoxelType::Block {
-            for quad in 0..6 {
+            for (quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
                 let mut pos3d = to_3d(pos1d);
                 let mut world_pos = chunk.world_pos;
                 let mut should_create_quad = false;
@@ -23,8 +23,8 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
                 if quad_is_visible(quad, &chunk.voxels, pos3d) && !quad_outside_chunk {
                     should_create_quad = true;
                 }
-                if quad_outside_chunk && adjacent_chunks[quad].is_some() {
-                    let adjacent_chunk = adjacent_chunks[quad].unwrap();
+                if quad_outside_chunk && adjacent_chunk.is_some() {
+                    let adjacent_chunk = adjacent_chunk.unwrap();
 
                     let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
                     if adjacent_chunk.voxels[adjacent_quad_1d] == VoxelType::Air {
@@ -65,4 +65,3 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     mesh.set_indices(Some(Indices::U32(indices)));
     mesh
 }
-
