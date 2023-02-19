@@ -25,6 +25,8 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
+        if self.loaded_chunks.contains_key(&pos) {return;}
+
         let chunk = Chunk::new(gen_terrain(tuple_to_vec3(pos)), tuple_to_vec3(pos));
         self.loaded_chunks.insert(pos, chunk);
 
