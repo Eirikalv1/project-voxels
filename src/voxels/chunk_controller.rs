@@ -25,7 +25,9 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        if self.loaded_chunks.contains_key(&pos) {return;}
+        if self.loaded_chunks.contains_key(&pos) {
+            return;
+        }
 
         let chunk = Chunk::new(gen_terrain(tuple_to_vec3(pos)), tuple_to_vec3(pos));
         self.loaded_chunks.insert(pos, chunk);
@@ -49,5 +51,11 @@ impl ChunkController {
             self.loaded_chunks.get(&(pos.0, pos.1, pos.2 + 1)),
             self.loaded_chunks.get(&(pos.0, pos.1, pos.2 - 1)),
         ]
+    }
+}
+
+impl Default for ChunkController {
+    fn default() -> Self {
+        Self::new()
     }
 }
