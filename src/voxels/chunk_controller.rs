@@ -7,6 +7,7 @@ use crate::utils::tuple_to_vec3;
 use super::chunk::*;
 use super::terrain_gen::*;
 
+#[derive(Component)]
 pub struct ChunkController {
     pub loaded_chunks: HashMap<(i32, i32, i32), Chunk>,
 }
@@ -18,7 +19,7 @@ impl ChunkController {
         Self { loaded_chunks }
     }
 
-    pub fn is_chunk_loaded(&self, pos: (i32, i32, i32)) -> bool {
+    pub fn chunk_loaded(&self, pos: (i32, i32, i32)) -> bool {
         self.loaded_chunks.contains_key(&pos)
     }
 
