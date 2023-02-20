@@ -78,9 +78,12 @@ fn render_chunks(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut voxel_controller = voxel_controller_query.single_mut();
-    if !voxel_controller.0.chunk_loaded((0, 0, 0)) {
-        voxel_controller
-            .0
-            .load_chunk((0, 0, 0), &mut commands, &mut meshes, &mut materials);
+    if !voxel_controller.0.chunk_loaded(IVec3::new(0, 0, 0)) {
+        voxel_controller.0.load_chunk(
+            IVec3::new(0, 0, 0),
+            &mut commands,
+            &mut meshes,
+            &mut materials,
+        );
     }
 }
