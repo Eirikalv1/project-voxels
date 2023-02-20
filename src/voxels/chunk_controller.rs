@@ -18,6 +18,10 @@ impl ChunkController {
         Self { loaded_chunks }
     }
 
+    pub fn is_chunk_loaded(&self, pos: (i32, i32, i32)) -> bool {
+        self.loaded_chunks.contains_key(&pos)
+    }
+
     pub fn load_chunk(
         &mut self,
         pos: (i32, i32, i32),
@@ -25,10 +29,6 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        if self.loaded_chunks.contains_key(&pos) {
-            return;
-        }
-
         let chunk = Chunk::new(gen_terrain(tuple_to_vec3(pos)), tuple_to_vec3(pos));
         self.loaded_chunks.insert(pos, chunk);
 
