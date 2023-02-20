@@ -1,8 +1,9 @@
 use bevy::pbr::wireframe::WireframePlugin;
 use bevy::prelude::*;
-use bevy_flycam::PlayerPlugin;
+use bevy_flycam::{FlyCam, NoCameraPlayerPlugin};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
+use crate::utils::CHUNK_SIZE;
 use crate::voxels::chunk_controller::*;
 
 pub fn run() {
@@ -10,14 +11,13 @@ pub fn run() {
         .add_plugins(DefaultPlugins)
         .add_plugin(WireframePlugin)
         .add_plugin(WorldInspectorPlugin)
-        .add_plugin(PlayerPlugin)
+        .add_plugin(NoCameraPlayerPlugin)
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
         .add_startup_system_set(
             SystemSet::new()
                 .with_system(spawn_pointlight)
                 .with_system(init),
         )
-        .add_system(move_player)
         .add_system(render_chunks)
         .run();
 }
@@ -37,42 +37,11 @@ fn spawn_pointlight(mut commands: Commands) {
 }
 
 fn init(mut commands: Commands) {
-    commands.spawn((SpatialBundle::default(), Player, ChunkController::default()));
-}
-
-#[derive(Component)]
-struct Player;
-
-fn move_player(
-    keyboard_input: Res<Input<KeyCode>>,
-    mut player_query: Query<&mut Transform, With<Player>>,
-) {
-    let mut player_transform = player_query.single_mut();
-    let mut direction = Vec3::ZERO;
-
-    if keyboard_input.pressed(KeyCode::D) {
-        direction.x += 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::A) {
-        direction.x -= 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::W) {
-        direction.z += 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::S) {
-        direction.z -= 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::Space) {
-        direction.y += 1.0;
-    }
-    if keyboard_input.pressed(KeyCode::LShift) {
-        direction.y -= 1.0;
-    }
-    player_transform.translation += direction;
+    commands.spawn((Camera3dBundle::default(), FlyCam, ChunkController::default()));
 }
 
 fn render_chunks(
-    mut voxel_controller_query: Query<(&mut ChunkController, &Transform), With<Player>>,
+    mut voxel_controller_query: Query<(&mut ChunkController, &Transform)>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
@@ -86,4 +55,13 @@ fn render_chunks(
             &mut materials,
         );
     }
+    if !voxel_controller.0.chunk_loaded(IVec3::new(1, 0, 0)) {
+        voxel_controller.0.load_chunk(
+            IVec3::new(1, 0, 0),
+            &mut commands,
+            &mut meshes,
+            &mut materials,
+        );
+    }
+
 }
