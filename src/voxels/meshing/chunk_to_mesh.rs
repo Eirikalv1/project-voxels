@@ -14,7 +14,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     for (pos1d, voxel_visibility) in chunk.voxels.iter().enumerate() {
         for (mut quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
             let mut pos3d = to_3d(pos1d);
-            let world_pos = chunk.world_pos;
+            let chunk_pos = chunk.chunk_pos;
             let mut should_create_quad = false;
 
             let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
@@ -47,7 +47,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
             }
             if should_create_quad {
                 let (mut quad_pos, mut quad_normal, mut quad_uv) =
-                    get_quad_data(quad, pos3d, world_pos);
+                    get_quad_data(quad, pos3d, chunk_pos);
                 quad_poses.append(&mut quad_pos);
                 quad_normals.append(&mut quad_normal);
                 quad_uvs.append(&mut quad_uv);

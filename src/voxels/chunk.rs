@@ -6,12 +6,12 @@ use crate::utils::*;
 #[derive(Clone)]
 pub struct Chunk {
     pub voxels: ChunkData,
-    pub world_pos: Vec3,
+    pub chunk_pos: Vec3,
 }
 
 impl Chunk {
-    pub fn new(voxels: ChunkData, world_pos: Vec3) -> Self {
-        Self { voxels, world_pos }
+    pub fn new(voxels: ChunkData, chunk_pos: Vec3) -> Self {
+        Self { voxels, chunk_pos }
     }
 }
 
@@ -34,13 +34,13 @@ impl ChunkBundle {
                 mesh: meshes.add(to_mesh(chunk, adjacent_chunks)),
                 material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
                 transform: Transform {
-                    translation: chunk.world_pos,
+                    translation: chunk.chunk_pos,
                     ..default()
                 },
                 ..default()
             },
             wireframe: Wireframe,
-            name: Name::new(format!("Chunk [{}]", chunk.world_pos)),
+            name: Name::new(format!("Chunk [{}]", chunk.chunk_pos)),
         }
     }
 }

@@ -6,19 +6,19 @@ use crate::utils::*;
 const AMPLITUDE: f64 = 20.;
 const FREQUENCY: f64 = 10.;
 
-pub fn gen_terrain(world_pos: Vec3) -> ChunkData {
+pub fn gen_terrain(chunk_pos: Vec3) -> ChunkData {
     let mut chunk_data: ChunkData = Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]);
 
     let noise = OpenSimplex::new(0);
 
     for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d);
-        let world_pos3d = pos3d + world_pos * CHUNK_SIZE;
+        let chunk_pos3d = pos3d + chunk_pos * CHUNK_SIZE;
 
         let height = (noise.get([
-            world_pos3d.x as f64 / FREQUENCY,
+            chunk_pos3d.x as f64 / FREQUENCY,
             0.0,
-            world_pos3d.z as f64 / FREQUENCY,
+            chunk_pos3d.z as f64 / FREQUENCY,
         ]) * AMPLITUDE
             + AMPLITUDE / 2.0) as i32;
 
