@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_flycam::{FlyCam, NoCameraPlayerPlugin};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::utils::{CHUNK_SIZE, to_ivec3};
+use crate::utils::{to_ivec3, CHUNK_SIZE};
 use crate::voxels::chunk_controller::*;
 
 pub fn run() {
@@ -37,7 +37,11 @@ fn spawn_pointlight(mut commands: Commands) {
 }
 
 fn init(mut commands: Commands) {
-    commands.spawn((Camera3dBundle::default(), FlyCam, ChunkController::default()));
+    commands.spawn((
+        Camera3dBundle::default(),
+        FlyCam,
+        ChunkController::default(),
+    ));
 }
 
 fn render_chunks(
@@ -47,11 +51,16 @@ fn render_chunks(
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
     let mut voxel_controller = voxel_controller_query.single_mut();
-    let player_pos = Vec3::new(f32::floor(voxel_controller.1.translation.x / CHUNK_SIZE), 
-    f32::floor(voxel_controller.1.translation.y / CHUNK_SIZE),
-    f32::floor(voxel_controller.1.translation.z / CHUNK_SIZE));
+    let player_pos = Vec3::new(
+        f32::floor(voxel_controller.1.translation.x / CHUNK_SIZE),
+        f32::floor(voxel_controller.1.translation.y / CHUNK_SIZE),
+        f32::floor(voxel_controller.1.translation.z / CHUNK_SIZE),
+    );
 
-    if player_pos.x % CHUNK_SIZE == 0. || player_pos.y % CHUNK_SIZE == 0. || player_pos.z % CHUNK_SIZE == 0. {
+    if player_pos.x % CHUNK_SIZE == 0.
+        || player_pos.y % CHUNK_SIZE == 0.
+        || player_pos.z % CHUNK_SIZE == 0.
+    {
         if !voxel_controller.0.chunk_loaded(to_ivec3(player_pos)) {
             voxel_controller.0.load_chunk(
                 to_ivec3(player_pos),
@@ -60,6 +69,5 @@ fn render_chunks(
                 &mut materials,
             );
         }
-    } 
-    
+    }
 }
