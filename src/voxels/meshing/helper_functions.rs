@@ -8,29 +8,29 @@ pub type UvData = Vec<[f32; 2]>;
 
 pub fn voxel_to_right(pos3d: Vec3, voxels: &ChunkData) -> bool {
     pos3d.x + 1. < CHUNK_SIZE
-        && voxels.get(to_1d(pos3d.x + 1., pos3d.y, pos3d.z)) == Some(&VoxelType::Block)
+        && voxels.get(to_1d(pos3d.x + 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_left(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.x > 0. && voxels.get(to_1d(pos3d.x - 1., pos3d.y, pos3d.z)) == Some(&VoxelType::Block)
+    pos3d.x > 0. && voxels.get(to_1d(pos3d.x - 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_top(pos3d: Vec3, voxels: &ChunkData) -> bool {
     pos3d.y + 1. < CHUNK_SIZE
-        && voxels.get(to_1d(pos3d.x, pos3d.y + 1., pos3d.z)) == Some(&VoxelType::Block)
+        && voxels.get(to_1d(pos3d.x, pos3d.y + 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_bottom(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.y > 0. && voxels.get(to_1d(pos3d.x, pos3d.y - 1., pos3d.z)) == Some(&VoxelType::Block)
+    pos3d.y > 0. && voxels.get(to_1d(pos3d.x, pos3d.y - 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_front(pos3d: Vec3, voxels: &ChunkData) -> bool {
     pos3d.z + 1. < CHUNK_SIZE
-        && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z + 1.)) == Some(&VoxelType::Block)
+        && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z + 1.)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_back(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.z > 0. && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelType::Block)
+    pos3d.z > 0. && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {

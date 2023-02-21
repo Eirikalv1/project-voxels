@@ -12,7 +12,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_uvs: UvData = vec![];
 
     for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
-        if *voxel_type == VoxelType::Block {
+        if *voxel_type == VoxelVisibility::Opaque {
             for (quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
                 let mut pos3d = to_3d(pos1d);
                 let mut world_pos = chunk.world_pos;
@@ -27,7 +27,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
                     let adjacent_chunk = adjacent_chunk.unwrap();
 
                     let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
-                    if adjacent_chunk.voxels[adjacent_quad_1d] == VoxelType::Air {
+                    if adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Empty {
                         should_create_quad = true;
                         if quad % 2 != 0 {
                             pos3d = to_3d(adjacent_quad_1d);
