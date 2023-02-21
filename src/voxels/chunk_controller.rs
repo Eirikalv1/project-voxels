@@ -30,8 +30,8 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        let chunk = Chunk::new(gen_terrain(to_fvec3(pos)), to_fvec3(pos));
-        self.loaded_chunks.insert(pos, chunk);
+        self.loaded_chunks
+            .insert(pos, Chunk::new(gen_terrain(to_fvec3(pos)), to_fvec3(pos)));
 
         commands.spawn(ChunkBundle::new(
             &self.loaded_chunks[&pos],

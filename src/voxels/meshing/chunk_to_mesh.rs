@@ -11,37 +11,46 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_normals: NormalData = vec![];
     let mut quad_uvs: UvData = vec![];
 
-    for (pos1d, voxel_type) in chunk.voxels.iter().enumerate() {
-        if *voxel_type == VoxelVisibility::Opaque {
-            for (quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
-                let mut pos3d = to_3d(pos1d);
-                let mut world_pos = chunk.world_pos;
-                let mut should_create_quad = false;
+    for (pos1d, voxel_visibility) in chunk.voxels.iter().enumerate() {
+        for (mut quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
+            let mut pos3d = to_3d(pos1d);
+            let world_pos = chunk.world_pos;
+            let mut should_create_quad = false;
 
-                let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
+            let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
 
-                if quad_is_visible(quad, &chunk.voxels, pos3d) && !quad_outside_chunk {
+            if quad_is_visible(quad, &chunk.voxels, pos3d)
+                && !quad_outside_chunk
+                && *voxel_visibility == VoxelVisibility::Opaque
+            {
+                should_create_quad = true;
+            }
+
+            if adjacent_chunk.is_some() {
+                let adjacent_chunk = adjacent_chunk.unwrap();
+                let adjacent_quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
+
+                let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
+                if quad_outside_chunk
+                    && adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Empty
+                    && *voxel_visibility == VoxelVisibility::Opaque
+                {
                     should_create_quad = true;
                 }
-                if quad_outside_chunk && adjacent_chunk.is_some() {
-                    let adjacent_chunk = adjacent_chunk.unwrap();
-
-                    let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
-                    if adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Empty {
-                        should_create_quad = true;
-                        if quad % 2 != 0 {
-                            pos3d = to_3d(adjacent_quad_1d);
-                            world_pos = adjacent_chunk.world_pos;
-                        }
-                    }
+                if adjacent_quad_outside_chunk
+                    && chunk.voxels[pos1d] == VoxelVisibility::Empty
+                    && adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Opaque
+                {
+                    should_create_quad = true;
+                    (quad, pos3d) = switch_quad_side(quad, pos3d);
                 }
-                if should_create_quad {
-                    let (mut quad_pos, mut quad_normal, mut quad_uv) =
-                        get_quad_data(quad, pos3d, world_pos);
-                    quad_poses.append(&mut quad_pos);
-                    quad_normals.append(&mut quad_normal);
-                    quad_uvs.append(&mut quad_uv);
-                }
+            }
+            if should_create_quad {
+                let (mut quad_pos, mut quad_normal, mut quad_uv) =
+                    get_quad_data(quad, pos3d, world_pos);
+                quad_poses.append(&mut quad_pos);
+                quad_normals.append(&mut quad_normal);
+                quad_uvs.append(&mut quad_uv);
             }
         }
     }

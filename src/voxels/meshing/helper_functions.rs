@@ -12,7 +12,8 @@ pub fn voxel_to_right(pos3d: Vec3, voxels: &ChunkData) -> bool {
 }
 
 pub fn voxel_to_left(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.x > 0. && voxels.get(to_1d(pos3d.x - 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
+    pos3d.x > 0.
+        && voxels.get(to_1d(pos3d.x - 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_top(pos3d: Vec3, voxels: &ChunkData) -> bool {
@@ -21,7 +22,8 @@ pub fn voxel_to_top(pos3d: Vec3, voxels: &ChunkData) -> bool {
 }
 
 pub fn voxel_to_bottom(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.y > 0. && voxels.get(to_1d(pos3d.x, pos3d.y - 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
+    pos3d.y > 0.
+        && voxels.get(to_1d(pos3d.x, pos3d.y - 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn voxel_to_front(pos3d: Vec3, voxels: &ChunkData) -> bool {
@@ -30,7 +32,8 @@ pub fn voxel_to_front(pos3d: Vec3, voxels: &ChunkData) -> bool {
 }
 
 pub fn voxel_to_back(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.z > 0. && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelVisibility::Opaque)
+    pos3d.z > 0.
+        && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelVisibility::Opaque)
 }
 
 pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
@@ -127,7 +130,7 @@ pub fn get_quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
         3 => pos3d.y == 0.,
         4 => pos3d.z == CHUNK_SIZE_MINUS_ONE,
         5 => pos3d.z == 0.,
-        _ => false,
+        _ => panic!("Quad indexing out of range"),
     }
 }
 
@@ -139,6 +142,18 @@ pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
         3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE_MINUS_ONE, pos3d.z),
         4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE_MINUS_ONE),
         5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE_MINUS_ONE),
+        _ => panic!("Quad indexing out of range"),
+    }
+}
+
+pub fn switch_quad_side(quad: usize, pos3d: Vec3) -> (usize, Vec3) {
+    match quad {
+        0 => (1, Vec3::new(pos3d.x + 1., pos3d.y, pos3d.z)),
+        1 => (0, Vec3::new(pos3d.x - 1., pos3d.y, pos3d.z)),
+        2 => (3, Vec3::new(pos3d.x, pos3d.y + 1., pos3d.z)),
+        3 => (2, Vec3::new(pos3d.x, pos3d.y - 1., pos3d.z)),
+        4 => (5, Vec3::new(pos3d.x, pos3d.y, pos3d.z + 1.)),
+        5 => (4, Vec3::new(pos3d.x, pos3d.y, pos3d.z - 1.)),
         _ => panic!("Quad indexing out of range"),
     }
 }

@@ -57,17 +57,16 @@ fn render_chunks(
         f32::floor(voxel_controller.1.translation.z / CHUNK_SIZE),
     );
 
-    if player_pos.x % CHUNK_SIZE == 0.
+    if (player_pos.x % CHUNK_SIZE == 0.
         || player_pos.y % CHUNK_SIZE == 0.
-        || player_pos.z % CHUNK_SIZE == 0.
+        || player_pos.z % CHUNK_SIZE == 0.)
+        && !voxel_controller.0.chunk_loaded(to_ivec3(player_pos))
     {
-        if !voxel_controller.0.chunk_loaded(to_ivec3(player_pos)) {
-            voxel_controller.0.load_chunk(
-                to_ivec3(player_pos),
-                &mut commands,
-                &mut meshes,
-                &mut materials,
-            );
-        }
+        voxel_controller.0.load_chunk(
+            to_ivec3(player_pos),
+            &mut commands,
+            &mut meshes,
+            &mut materials,
+        );
     }
 }
