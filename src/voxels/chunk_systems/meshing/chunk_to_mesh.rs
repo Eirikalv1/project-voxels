@@ -4,7 +4,7 @@ use bevy::render::render_resource::PrimitiveTopology;
 
 use super::helper_functions::*;
 use crate::utils::*;
-use crate::voxels::chunk::*;
+use crate::voxels::chunk_systems::chunk::*;
 
 pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_poses: PositionData = vec![];

@@ -56,7 +56,7 @@ fn render_chunks(
         f32::floor(voxel_controller.1.translation.y / CHUNK_SIZE),
         f32::floor(voxel_controller.1.translation.z / CHUNK_SIZE),
     );
-    
+
     if (player_pos.x % CHUNK_SIZE == 0.
         || player_pos.y % CHUNK_SIZE == 0.
         || player_pos.z % CHUNK_SIZE == 0.)

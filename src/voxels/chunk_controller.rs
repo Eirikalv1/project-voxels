@@ -4,8 +4,7 @@ use bevy::prelude::*;
 
 use crate::utils::to_fvec3;
 
-use super::chunk::*;
-use super::terrain_gen::*;
+use super::chunk_systems::{chunk::*, terrain_gen::*};
 
 #[derive(Component)]
 pub struct ChunkController {
