@@ -23,3 +23,11 @@ pub fn to_ivec3(pos: Vec3) -> IVec3 {
 pub fn to_fvec3(pos: IVec3) -> Vec3 {
     Vec3::new(pos.x as f32, pos.y as f32, pos.z as f32)
 }
+
+pub fn to_chunk_pos(pos: Vec3) -> IVec3 {
+    IVec3::new(
+        f32::floor(pos.x / CHUNK_SIZE) as i32,
+        f32::floor(pos.y / CHUNK_SIZE) as i32,
+        f32::floor(pos.z / CHUNK_SIZE) as i32,
+    )
+}
