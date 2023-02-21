@@ -3,6 +3,15 @@ use bevy::{pbr::wireframe::Wireframe, prelude::*};
 use super::meshing::chunk_to_mesh::to_mesh;
 use crate::utils::*;
 
+pub type ChunkData = Box<[VoxelVisibility; CHUNK_VOLUME]>;
+
+#[derive(PartialEq, Eq, Clone, Copy)]
+pub enum VoxelVisibility {
+    Empty,
+    Transparent,
+    Opaque,
+}
+
 #[derive(Clone)]
 pub struct Chunk {
     pub voxels: ChunkData,

@@ -1,6 +1,7 @@
 use bevy::prelude::Vec3;
 
 use crate::utils::*;
+use crate::voxels::chunk_systems::chunk::*;
 
 pub type PositionData = Vec<[f32; 3]>;
 pub type NormalData = Vec<[f32; 3]>;

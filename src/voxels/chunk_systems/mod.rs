@@ -1,4 +1,4 @@
-pub mod terrain_gen;
 pub mod chunk;
+pub mod terrain_gen;
 
 mod meshing;

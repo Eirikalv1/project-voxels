@@ -1,6 +1,7 @@
 use bevy::prelude::*;
 use noise::{NoiseFn, OpenSimplex};
 
+use super::chunk::*;
 use crate::utils::*;
 
 const AMPLITUDE: f64 = 20.;

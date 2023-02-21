@@ -4,15 +4,6 @@ pub const CHUNK_SIZE: f32 = 32.0;
 pub const CHUNK_SIZE_MINUS_ONE: f32 = CHUNK_SIZE - 1.;
 pub const CHUNK_VOLUME: usize = (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) as usize;
 
-pub type ChunkData = Box<[VoxelVisibility; CHUNK_VOLUME]>;
-
-#[derive(PartialEq, Eq, Clone, Copy)]
-pub enum VoxelVisibility {
-    Empty,
-    Transparent,
-    Opaque,
-}
-
 pub fn to_3d(pos: usize) -> Vec3 {
     Vec3::new(
         pos as f32 % CHUNK_SIZE,
