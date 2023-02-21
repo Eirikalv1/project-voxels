@@ -1,4 +1,4 @@
-use bevy::prelude::{Vec3, IVec3};
+use bevy::prelude::{IVec3, Vec3};
 
 pub const CHUNK_SIZE: f32 = 32.0;
 pub const CHUNK_SIZE_MINUS_ONE: f32 = CHUNK_SIZE - 1.;
