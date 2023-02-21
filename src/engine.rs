@@ -3,7 +3,7 @@ use bevy::prelude::*;
 use bevy_flycam::{FlyCam, NoCameraPlayerPlugin};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::utils::{to_chunk_pos, CHUNK_SIZE};
+use crate::utils::{to_chunk_pos, RENDER_DISTANCE_RANGE};
 use crate::voxels::chunk_controller::*;
 
 pub fn run() {
@@ -53,13 +53,18 @@ fn render_chunks(
     let mut voxel_controller = voxel_controller_query.single_mut();
     let player_pos = to_chunk_pos(voxel_controller.1.translation);
 
-    if (player_pos.x % CHUNK_SIZE as i32 == 0
-        || player_pos.y % CHUNK_SIZE as i32 == 0
-        || player_pos.z % CHUNK_SIZE as i32 == 0)
-        && !voxel_controller.0.chunk_loaded(player_pos)
-    {
-        voxel_controller
-            .0
-            .load_chunk(player_pos, &mut commands, &mut meshes, &mut materials);
+    for x in RENDER_DISTANCE_RANGE {
+        for z in RENDER_DISTANCE_RANGE {
+            let chunk_pos = IVec3::new(player_pos.x + x, player_pos.y, player_pos.z + z);
+
+            if !voxel_controller.0.chunk_loaded(chunk_pos) {
+                voxel_controller.0.load_chunk(
+                    chunk_pos,
+                    &mut commands,
+                    &mut meshes,
+                    &mut materials,
+                );
+            }
+        }
     }
 }
