@@ -6,20 +6,20 @@ use super::helper_functions::*;
 use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
-pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
+pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_poses: PositionData = vec![];
     let mut quad_normals: NormalData = vec![];
     let mut quad_uvs: UvData = vec![];
 
-    for (pos1d, voxel_visibility) in chunk.voxels.iter().enumerate() {
+    for (pos1d, voxel_visibility) in voxels.iter().enumerate() {
         for (mut quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
             let mut pos3d = to_3d(pos1d);
-            let chunk_pos = chunk.chunk_pos;
+            let chunk_pos = chunk_pos;
             let mut should_create_quad = false;
 
             let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
 
-            if quad_is_visible(quad, &chunk.voxels, pos3d)
+            if quad_is_visible(quad, voxels, pos3d)
                 && !quad_outside_chunk
                 && *voxel_visibility == VoxelVisibility::Opaque
             {
@@ -38,7 +38,7 @@ pub fn to_mesh(chunk: &Chunk, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
                     should_create_quad = true;
                 }
                 if adjacent_quad_outside_chunk
-                    && chunk.voxels[pos1d] == VoxelVisibility::Empty
+                    && voxels[pos1d] == VoxelVisibility::Empty
                     && adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Opaque
                 {
                     should_create_quad = true;

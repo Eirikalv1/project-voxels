@@ -2,8 +2,6 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
-use crate::utils::to_fvec3;
-
 use super::chunk_systems::{chunk::*, terrain_gen::*};
 
 #[derive(Resource)]
@@ -29,15 +27,24 @@ impl ChunkController {
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) {
-        self.loaded_chunks
-            .insert(pos, Chunk::new(gen_terrain(to_fvec3(pos)), to_fvec3(pos)));
+        self.loaded_chunks.insert(
+            pos,
+            Chunk::new(
+                gen_terrain(pos.as_vec3()),
+                pos.as_vec3(),
+                self.get_adjacent_chunk(pos),
+                commands,
+                meshes,
+                materials,
+            ),
+        );
+    }
 
-        commands.spawn(ChunkBundle::new(
-            &self.loaded_chunks[&pos],
-            self.get_adjacent_chunk(pos),
-            meshes,
-            materials,
-        ));
+    pub fn unload_chunk(&mut self, pos: IVec3, commands: &mut Commands) {
+        commands
+            .entity(self.loaded_chunks[&pos].entity_id)
+            .despawn_recursive();
+        self.loaded_chunks.remove(&pos);
     }
 
     fn get_adjacent_chunk(&self, pos: IVec3) -> [Option<&Chunk>; 6] {

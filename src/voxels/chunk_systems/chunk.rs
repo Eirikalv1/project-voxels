@@ -12,44 +12,42 @@ pub enum VoxelVisibility {
     Opaque,
 }
 
-#[derive(Clone)]
+#[derive(Component)]
 pub struct Chunk {
     pub voxels: ChunkData,
     pub chunk_pos: Vec3,
+    pub entity_id: Entity,
 }
 
 impl Chunk {
-    pub fn new(voxels: ChunkData, chunk_pos: Vec3) -> Self {
-        Self { voxels, chunk_pos }
-    }
-}
-
-#[derive(Bundle)]
-pub struct ChunkBundle {
-    pub pbr_bundle: PbrBundle,
-    pub wireframe: Wireframe,
-    pub name: Name,
-}
-
-impl ChunkBundle {
     pub fn new(
-        chunk: &Chunk,
+        voxels: ChunkData,
+        chunk_pos: Vec3,
         adjacent_chunks: [Option<&Chunk>; 6],
+        commands: &mut Commands,
         meshes: &mut ResMut<Assets<Mesh>>,
         materials: &mut ResMut<Assets<StandardMaterial>>,
     ) -> Self {
-        Self {
-            pbr_bundle: PbrBundle {
-                mesh: meshes.add(to_mesh(chunk, adjacent_chunks)),
-                material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
-                transform: Transform {
-                    translation: chunk.chunk_pos,
+        let entity_id = commands
+            .spawn((
+                PbrBundle {
+                    mesh: meshes.add(to_mesh(&voxels, chunk_pos, adjacent_chunks)),
+                    material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
+                    transform: Transform {
+                        translation: chunk_pos,
+                        ..default()
+                    },
                     ..default()
                 },
-                ..default()
-            },
-            wireframe: Wireframe,
-            name: Name::new(format!("Chunk [{}]", chunk.chunk_pos)),
+                Wireframe,
+                Name::new(format!("Chunk [{chunk_pos}]")),
+            ))
+            .id();
+
+        Self {
+            voxels,
+            chunk_pos,
+            entity_id,
         }
     }
 }
