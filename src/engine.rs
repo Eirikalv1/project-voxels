@@ -13,6 +13,7 @@ pub fn run() {
         .add_plugin(WorldInspectorPlugin)
         .add_plugin(NoCameraPlayerPlugin)
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
+        .insert_resource(ChunkController::default())
         .add_startup_system_set(
             SystemSet::new()
                 .with_system(spawn_pointlight)
@@ -37,33 +38,25 @@ fn spawn_pointlight(mut commands: Commands) {
 }
 
 fn init(mut commands: Commands) {
-    commands.spawn((
-        Camera3dBundle::default(),
-        FlyCam,
-        ChunkController::default(),
-    ));
+    commands.spawn((Camera3dBundle::default(), FlyCam));
 }
 
 fn render_chunks(
-    mut voxel_controller_query: Query<(&mut ChunkController, &Transform)>,
+    mut player_query: Query<&Transform, With<FlyCam>>,
+    mut chunk_controller: ResMut<ChunkController>,
     mut commands: Commands,
     mut meshes: ResMut<Assets<Mesh>>,
     mut materials: ResMut<Assets<StandardMaterial>>,
 ) {
-    let mut voxel_controller = voxel_controller_query.single_mut();
-    let player_pos = to_chunk_pos(voxel_controller.1.translation);
+    let player = player_query.single_mut();
+    let player_pos = to_chunk_pos(player.translation);
 
     for x in RENDER_DISTANCE_RANGE {
         for z in RENDER_DISTANCE_RANGE {
             let chunk_pos = IVec3::new(player_pos.x + x, player_pos.y, player_pos.z + z);
 
-            if !voxel_controller.0.chunk_loaded(chunk_pos) {
-                voxel_controller.0.load_chunk(
-                    chunk_pos,
-                    &mut commands,
-                    &mut meshes,
-                    &mut materials,
-                );
+            if !chunk_controller.chunk_loaded(chunk_pos) {
+                chunk_controller.load_chunk(chunk_pos, &mut commands, &mut meshes, &mut materials);
             }
         }
     }

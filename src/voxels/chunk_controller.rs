@@ -6,7 +6,7 @@ use crate::utils::to_fvec3;
 
 use super::chunk_systems::{chunk::*, terrain_gen::*};
 
-#[derive(Component)]
+#[derive(Resource)]
 pub struct ChunkController {
     pub loaded_chunks: HashMap<IVec3, Chunk>,
 }
