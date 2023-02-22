@@ -1,3 +1,5 @@
+use std::ops::Range;
+
 use bevy::prelude::{IVec3, Vec3};
 
 pub const CHUNK_SIZE: f32 = 32.0;
@@ -5,7 +7,7 @@ pub const CHUNK_SIZE_MINUS_ONE: f32 = CHUNK_SIZE - 1.;
 pub const CHUNK_VOLUME: usize = (CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) as usize;
 
 pub const RENDER_DISTANCE: i32 = 2;
-pub const RENDER_DISTANCE_RANGE: std::ops::Range<i32> = -RENDER_DISTANCE..RENDER_DISTANCE;
+pub const RENDER_DISTANCE_RANGE: Range<i32> = -RENDER_DISTANCE..RENDER_DISTANCE + 1;
 
 pub fn to_3d(pos: usize) -> Vec3 {
     Vec3::new(
