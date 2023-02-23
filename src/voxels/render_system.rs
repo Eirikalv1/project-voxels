@@ -28,10 +28,7 @@ pub fn render_chunks(
 
     let mut chunks_to_unload: Vec<IVec3> = vec![];
     for loaded_chunk in chunk_controller.loaded_chunks.iter() {
-        let distance_sq = i32::pow(
-            Vec3::length((*loaded_chunk.0 - player_pos).as_vec3()) as i32,
-            2,
-        );
+        let distance_sq = i32::pow(Vec3::length((*loaded_chunk.0 - player_pos).as_vec3()) as i32, 2);
 
         if distance_sq > RENDER_DISTANCE_SQUARED {
             chunks_to_unload.push(*loaded_chunk.0);

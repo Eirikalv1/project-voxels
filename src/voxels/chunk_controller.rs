@@ -41,9 +41,7 @@ impl ChunkController {
     }
 
     pub fn unload_chunk(&mut self, pos: IVec3, commands: &mut Commands) {
-        commands
-            .entity(self.loaded_chunks[&pos].entity_id)
-            .despawn_recursive();
+        commands.entity(self.loaded_chunks[&pos].entity_id).despawn_recursive();
         self.loaded_chunks.remove(&pos);
     }
 

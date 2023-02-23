@@ -13,11 +13,7 @@ pub fn run() {
         .add_plugin(NoCameraPlayerPlugin)
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
         .insert_resource(ChunkController::default())
-        .add_startup_system_set(
-            SystemSet::new()
-                .with_system(spawn_pointlight)
-                .with_system(init),
-        )
+        .add_startup_system_set(SystemSet::new().with_system(spawn_pointlight).with_system(init))
         .add_system(render_chunks)
         .run();
 }
@@ -39,4 +35,3 @@ fn spawn_pointlight(mut commands: Commands) {
 fn init(mut commands: Commands) {
     commands.spawn((Camera3dBundle::default(), FlyCam));
 }
-
