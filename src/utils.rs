@@ -22,10 +22,16 @@ pub fn to_1d(x: f32, y: f32, z: f32) -> usize {
     ((z * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + x) as usize
 }
 
+// Chunk position is the position of a chunk relative to other chunks
 pub fn to_chunk_pos(pos: Vec3) -> IVec3 {
     IVec3::new(
         f32::floor(pos.x / CHUNK_SIZE) as i32,
         f32::floor(pos.y / CHUNK_SIZE) as i32,
         f32::floor(pos.z / CHUNK_SIZE) as i32,
     )
+}
+
+// World position is the is the same as Bevy's coordinate system
+pub fn to_world_pos(pos: Vec3, chunk_pos: IVec3) -> Vec3 {
+    pos + chunk_pos.as_vec3() * CHUNK_SIZE
 }
