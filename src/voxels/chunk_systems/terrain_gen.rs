@@ -23,11 +23,7 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
         let pos3d = to_3d(pos1d);
         let world_pos3d = to_world_pos(pos3d, chunk_pos);
 
-        let height = (noise.get([
-            world_pos3d.x as f64 / FREQUENCY,
-            0.0,
-            world_pos3d.z as f64 / FREQUENCY,
-        ]) * AMPLITUDE
+        let height = (noise.get([world_pos3d.x as f64 / FREQUENCY, 0.0, world_pos3d.z as f64 / FREQUENCY]) * AMPLITUDE
             + AMPLITUDE / 2.0) as i32;
 
         for y in 0..height {

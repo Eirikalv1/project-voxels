@@ -19,7 +19,10 @@ pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Ch
 
             let quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
 
-            if quad_is_visible(quad, voxels, pos3d) && !quad_outside_chunk && *voxel_visibility == VoxelVisibility::Opaque {
+            if quad_is_visible(quad, voxels, pos3d)
+                && !quad_outside_chunk
+                && *voxel_visibility == VoxelVisibility::Opaque
+            {
                 should_create_quad = true;
             }
 

@@ -54,32 +54,62 @@ pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, Nor
 
     match quad {
         0 => (
-            vec![[max_x, min_y, min_z], [max_x, max_y, min_z], [max_x, max_y, max_z], [max_x, min_y, max_z]],
+            vec![
+                [max_x, min_y, min_z],
+                [max_x, max_y, min_z],
+                [max_x, max_y, max_z],
+                [max_x, min_y, max_z],
+            ],
             vec![[1., 0., 0.]; 4],
             vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
         ),
         1 => (
-            vec![[min_x, min_y, max_z], [min_x, max_y, max_z], [min_x, max_y, min_z], [min_x, min_y, min_z]],
+            vec![
+                [min_x, min_y, max_z],
+                [min_x, max_y, max_z],
+                [min_x, max_y, min_z],
+                [min_x, min_y, min_z],
+            ],
             vec![[-1., 0., 0.]; 4],
             vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
         ),
         2 => (
-            vec![[max_x, max_y, min_z], [min_x, max_y, min_z], [min_x, max_y, max_z], [max_x, max_y, max_z]],
+            vec![
+                [max_x, max_y, min_z],
+                [min_x, max_y, min_z],
+                [min_x, max_y, max_z],
+                [max_x, max_y, max_z],
+            ],
             vec![[0., 1., 0.]; 4],
             vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
         ),
         3 => (
-            vec![[max_x, min_y, max_z], [min_x, min_y, max_z], [min_x, min_y, min_z], [max_x, min_y, min_z]],
+            vec![
+                [max_x, min_y, max_z],
+                [min_x, min_y, max_z],
+                [min_x, min_y, min_z],
+                [max_x, min_y, min_z],
+            ],
             vec![[0., -1., 0.]; 4],
             vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
         ),
         4 => (
-            vec![[min_x, min_y, max_z], [max_x, min_y, max_z], [max_x, max_y, max_z], [min_x, max_y, max_z]],
+            vec![
+                [min_x, min_y, max_z],
+                [max_x, min_y, max_z],
+                [max_x, max_y, max_z],
+                [min_x, max_y, max_z],
+            ],
             vec![[0., 0., 1.]; 4],
             vec![[0., 0.], [1., 0.], [1., 1.], [0., 1.]],
         ),
         5 => (
-            vec![[min_x, max_y, min_z], [max_x, max_y, min_z], [max_x, min_y, min_z], [min_x, min_y, min_z]],
+            vec![
+                [min_x, max_y, min_z],
+                [max_x, max_y, min_z],
+                [max_x, min_y, min_z],
+                [min_x, min_y, min_z],
+            ],
             vec![[0., 0., -1.]; 4],
             vec![[1., 0.], [0., 0.], [0., 1.], [1., 1.]],
         ),
