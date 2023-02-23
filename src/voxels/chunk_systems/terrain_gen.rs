@@ -12,6 +12,13 @@ pub fn gen_terrain(chunk_pos: Vec3) -> ChunkData {
 
     let noise = OpenSimplex::new(0);
 
+    if chunk_pos.y > 0. {
+        return chunk_data;
+    }
+    if chunk_pos.y < 0. {
+        return Box::new([VoxelVisibility::Opaque; CHUNK_VOLUME]);
+    }
+
     for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d);
         let chunk_pos3d = pos3d + chunk_pos * CHUNK_SIZE;
