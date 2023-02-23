@@ -30,7 +30,7 @@ impl ChunkController {
         self.loaded_chunks.insert(
             pos,
             Chunk::new(
-                gen_terrain(pos.as_vec3()),
+                gen_terrain(pos),
                 pos.as_vec3(),
                 self.get_adjacent_chunk(pos),
                 commands,
