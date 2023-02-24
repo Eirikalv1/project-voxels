@@ -2,7 +2,7 @@ use std::collections::HashMap;
 
 use bevy::prelude::*;
 
-use super::chunk_systems::{chunk::*, terrain_gen::*};
+use super::chunk_systems::{chunk::*, terrain_generation::generate::*};
 
 #[derive(Resource)]
 pub struct ChunkController {

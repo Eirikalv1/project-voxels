@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use noise::{NoiseFn, OpenSimplex};
 
-use super::chunk::*;
 use crate::utils::*;
+use crate::voxels::chunk_systems::chunk::*;
 
 const AMPLITUDE: f64 = 20.;
 const FREQUENCY: f64 = 10.;
