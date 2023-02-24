@@ -10,6 +10,9 @@ pub const RENDER_DISTANCE: i32 = 2;
 pub const RENDER_DISTANCE_SQUARED: i32 = RENDER_DISTANCE * RENDER_DISTANCE;
 pub const RENDER_DISTANCE_RANGE: RangeInclusive<i32> = -RENDER_DISTANCE..=RENDER_DISTANCE;
 
+pub const WORLD_RADIUS: i32 = 3;
+pub const WORLD_RADIUS_MINUS_ONE: i32 = WORLD_RADIUS - 1;
+
 pub fn to_3d(pos: usize) -> Vec3 {
     Vec3::new(
         pos as f32 % CHUNK_SIZE,

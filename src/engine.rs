@@ -3,7 +3,10 @@ use bevy::prelude::*;
 use bevy_flycam::{FlyCam, NoCameraPlayerPlugin};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
-use crate::voxels::{chunk_controller::*, render_system::render_chunks};
+use crate::{
+    utils::to_world_pos,
+    voxels::{chunk_controller::*, render_system::render_chunks},
+};
 
 pub fn run() {
     App::new()
@@ -33,5 +36,14 @@ fn spawn_pointlight(mut commands: Commands) {
 }
 
 fn init(mut commands: Commands) {
-    commands.spawn((Camera3dBundle::default(), FlyCam));
+    commands.spawn((
+        Camera3dBundle {
+            transform: Transform {
+                translation: to_world_pos(Vec3::ZERO, IVec3::new(0, -3, 0)),
+                ..default()
+            },
+            ..default()
+        },
+        FlyCam,
+    ));
 }
