@@ -10,38 +10,13 @@ pub fn get_chunk_rotation(chunk_pos: IVec3) -> IVec3 {
     )
 }
 
-pub fn chunk_outside_world_radius(chunk_pos: IVec3) -> bool {
-    chunk_pos.x > WORLD_RADIUS_MINUS_ONE
-        || chunk_pos.y > WORLD_RADIUS_MINUS_ONE
-        || chunk_pos.z > WORLD_RADIUS_MINUS_ONE
-        || chunk_pos.x < -WORLD_RADIUS_MINUS_ONE
-        || chunk_pos.y < -WORLD_RADIUS_MINUS_ONE
-        || chunk_pos.z < -WORLD_RADIUS_MINUS_ONE
-}
-
-pub fn chunk_inside_world_radius(chunk_rot: IVec3) -> bool {
-    chunk_rot == IVec3::ZERO
-}
-
-pub fn should_rotate_chunk(chunk_rot: IVec3) -> bool {
-    matches!(
-        chunk_rot,
-        IVec3 { x: 1, y: 0, z: 0 }
-            | IVec3 { x: -1, y: 0, z: 0 }
-            | IVec3 { x: 0, y: 1, z: 0 }
-            | IVec3 { x: 0, y: -1, z: 0 }
-            | IVec3 { x: 0, y: 0, z: 1 }
-            | IVec3 { x: 0, y: 0, z: -1 }
-    )
-}
-
 pub fn rotate_chunk(chunk_rot: IVec3, mut pos: Vec3) -> Vec3 {
     if chunk_rot.x == 0 && chunk_rot.y != -1 && chunk_rot.z == 0 {
-        return pos
+        return pos;
     }
-    
+
     match chunk_rot {
-        IVec3 { x: 0, y: -1, z: 0} => pos.y = -pos.y - 1.,
+        IVec3 { x: 0, y: -1, z: 0 } => pos.y = -pos.y - 1.,
         IVec3 { x: 1, y: 0, z: 0 } => (pos.x, pos.y) = (pos.y, pos.x),
         IVec3 { x: -1, y: 0, z: 0 } => (pos.x, pos.y) = (-pos.y - 1., pos.x + 1.),
         IVec3 { x: 0, y: 0, z: 1 } => (pos.z, pos.y) = (pos.y, pos.z),

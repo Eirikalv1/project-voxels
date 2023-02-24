@@ -4,30 +4,29 @@ use noise::{NoiseFn, OpenSimplex};
 use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
-use super::chunk_rotation::{
-    chunk_inside_world_radius, chunk_outside_world_radius, get_chunk_rotation, rotate_chunk, should_rotate_chunk,
-};
+use super::chunk_rotation::{get_chunk_rotation, rotate_chunk};
+use super::chunk_type::ChunkType;
 
 const AMPLITUDE: f64 = 20.;
 const FREQUENCY: f64 = 10.;
 
 pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
-    let mut chunk_data: ChunkData = Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]);
-
     let chunk_rot = get_chunk_rotation(chunk_pos);
 
-    if chunk_outside_world_radius(chunk_pos) {
-        return chunk_data;
-    }
-
-    if chunk_inside_world_radius(chunk_rot) {
+    let chunk_type = ChunkType::get_chunk_type(chunk_pos, chunk_rot);
+    if chunk_type == ChunkType::Inside {
         return Box::new([VoxelVisibility::Opaque; CHUNK_VOLUME]);
     }
 
-    if !should_rotate_chunk(chunk_rot) {
-        return chunk_data;
+    if chunk_type != ChunkType::Center {
+        return Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]);
     }
 
+    gen_with_noise(chunk_pos, chunk_rot)
+}
+
+fn gen_with_noise(chunk_pos: IVec3, chunk_rot: IVec3) -> ChunkData {
+    let mut chunk_data: ChunkData = Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]);
     let noise = OpenSimplex::new(0);
 
     for pos1d in 0..CHUNK_VOLUME {
