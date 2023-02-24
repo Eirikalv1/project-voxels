@@ -125,7 +125,7 @@ pub fn get_quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
         3 => pos3d.y == 0.,
         4 => pos3d.z == CHUNK_SIZE_MINUS_ONE,
         5 => pos3d.z == 0.,
-        _ => panic!("Quad indexing out of range"),
+        _ => unreachable!("Quad indexing out of range"),
     }
 }
 
@@ -137,7 +137,7 @@ pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
         3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE_MINUS_ONE, pos3d.z),
         4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE_MINUS_ONE),
         5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE_MINUS_ONE),
-        _ => panic!("Quad indexing out of range"),
+        _ => unreachable!("Quad indexing out of range"),
     }
 }
 
@@ -149,6 +149,6 @@ pub fn switch_quad_side(quad: usize, pos3d: Vec3) -> (usize, Vec3) {
         3 => (2, Vec3::new(pos3d.x, pos3d.y - 1., pos3d.z)),
         4 => (5, Vec3::new(pos3d.x, pos3d.y, pos3d.z + 1.)),
         5 => (4, Vec3::new(pos3d.x, pos3d.y, pos3d.z - 1.)),
-        _ => panic!("Quad indexing out of range"),
+        _ => unreachable!("Quad indexing out of range"),
     }
 }
