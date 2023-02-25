@@ -4,7 +4,7 @@ use noise::{NoiseFn, OpenSimplex};
 use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
-use super::chunk_rotation::{get_chunk_rotation, rotate_chunk, chunk_pos_flattend_horistonally};
+use super::chunk_rotation::{chunk_pos_flattend_horistonally, get_chunk_rotation, rotate_chunk};
 use super::chunk_type::{get_corner_direction, get_edge_direction, ChunkType};
 
 const AMPLITUDE: f64 = 20.;
@@ -14,8 +14,8 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
     let chunk_rot = get_chunk_rotation(chunk_pos);
 
     match ChunkType::get_chunk_type(chunk_pos, chunk_rot) {
-        ChunkType::Inside => return Box::new([VoxelVisibility::Opaque; CHUNK_VOLUME]),
-        ChunkType::Outside => return Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]),
+        ChunkType::Inside => Box::new([VoxelVisibility::Opaque; CHUNK_VOLUME]),
+        ChunkType::Outside => Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]),
         ChunkType::Corner => {
             let (dir_a, dir_b, dir_c) = get_corner_direction(chunk_rot);
             let (chunk_data_a, chunk_data_b, chunk_data_c) = (
@@ -34,7 +34,7 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
                 }
             }
 
-            return corner_chunk_data;
+            corner_chunk_data
         }
         ChunkType::Edge => {
             let (dir_a, dir_b) = get_edge_direction(chunk_rot);
@@ -47,9 +47,9 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
                 }
             }
 
-            return edge_chunk_data;
+            edge_chunk_data
         }
-        ChunkType::Center => return gen_with_noise(chunk_pos, chunk_rot),
+        ChunkType::Center => gen_with_noise(chunk_pos, chunk_rot),
     }
 }
 

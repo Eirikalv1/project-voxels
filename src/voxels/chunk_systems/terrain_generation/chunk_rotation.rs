@@ -1,6 +1,6 @@
 use bevy::prelude::{IVec3, Vec3};
 
-use crate::utils::{CHUNK_SIZE, WORLD_RADIUS_MINUS_ONE, WORLD_DIAMETER};
+use crate::utils::{CHUNK_SIZE, WORLD_DIAMETER, WORLD_RADIUS_MINUS_ONE};
 
 pub fn get_chunk_rotation(chunk_pos: IVec3) -> IVec3 {
     IVec3::new(
