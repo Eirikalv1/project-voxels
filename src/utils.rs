@@ -12,6 +12,7 @@ pub const RENDER_DISTANCE_RANGE: RangeInclusive<i32> = -RENDER_DISTANCE..=RENDER
 
 pub const WORLD_RADIUS: i32 = 3;
 pub const WORLD_RADIUS_MINUS_ONE: i32 = WORLD_RADIUS - 1;
+pub const WORLD_DIAMETER: i32 = 2 * WORLD_RADIUS - 1; 
 
 pub fn to_3d(pos: usize) -> Vec3 {
     Vec3::new(

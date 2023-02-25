@@ -4,7 +4,7 @@ use noise::{NoiseFn, OpenSimplex};
 use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
-use super::chunk_rotation::{get_chunk_rotation, rotate_chunk};
+use super::chunk_rotation::{get_chunk_rotation, rotate_chunk, chunk_pos_flattend_horistonally};
 use super::chunk_type::{get_corner_direction, get_edge_direction, ChunkType};
 
 const AMPLITUDE: f64 = 20.;
@@ -33,6 +33,7 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
                     corner_chunk_data[pos] = VoxelVisibility::Opaque;
                 }
             }
+
             return corner_chunk_data;
         }
         ChunkType::Edge => {
@@ -45,15 +46,18 @@ pub fn gen_terrain(chunk_pos: IVec3) -> ChunkData {
                     edge_chunk_data[pos] = VoxelVisibility::Opaque;
                 }
             }
+
             return edge_chunk_data;
         }
         ChunkType::Center => return gen_with_noise(chunk_pos, chunk_rot),
     }
 }
 
-fn gen_with_noise(chunk_pos: IVec3, chunk_rot: IVec3) -> ChunkData {
+fn gen_with_noise(mut chunk_pos: IVec3, chunk_rot: IVec3) -> ChunkData {
     let mut chunk_data: ChunkData = Box::new([VoxelVisibility::Empty; CHUNK_VOLUME]);
     let noise = OpenSimplex::new(0);
+
+    chunk_pos = chunk_pos_flattend_horistonally(chunk_pos, chunk_rot);
 
     for pos1d in 0..CHUNK_VOLUME {
         let pos3d = to_3d(pos1d);

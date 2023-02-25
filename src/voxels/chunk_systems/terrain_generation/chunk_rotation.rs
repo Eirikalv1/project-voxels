@@ -1,6 +1,6 @@
 use bevy::prelude::{IVec3, Vec3};
 
-use crate::utils::{CHUNK_SIZE, WORLD_RADIUS_MINUS_ONE};
+use crate::utils::{CHUNK_SIZE, WORLD_RADIUS_MINUS_ONE, WORLD_DIAMETER};
 
 pub fn get_chunk_rotation(chunk_pos: IVec3) -> IVec3 {
     IVec3::new(
@@ -16,12 +16,22 @@ pub fn rotate_chunk(chunk_rot: IVec3, mut pos: Vec3) -> Vec3 {
     }
 
     match chunk_rot {
-        IVec3 { x: 0, y: -1, z: 0 } => pos.y = -pos.y - 1.,
-        IVec3 { x: 1, y: 0, z: 0 } => (pos.x, pos.y) = (pos.y, pos.x),
-        IVec3 { x: -1, y: 0, z: 0 } => (pos.x, pos.y) = (-pos.y - 1., pos.x + 1.),
-        IVec3 { x: 0, y: 0, z: 1 } => (pos.z, pos.y) = (pos.y, pos.z),
-        IVec3 { x: 0, y: 0, z: -1 } => (pos.z, pos.y) = (-pos.y + CHUNK_SIZE, pos.z),
+        IVec3::NEG_Y => (pos.z, pos.y) = (pos.z + 1., -pos.y - 1.),
+        IVec3::X => (pos.x, pos.y) = (pos.y, pos.x),
+        IVec3::NEG_X => (pos.x, pos.y) = (-pos.y - 1., pos.x + 1.),
+        IVec3::Z => (pos.z, pos.y) = (pos.y, pos.z),
+        IVec3::NEG_Z => (pos.z, pos.y) = (-pos.y + CHUNK_SIZE, pos.z),
         _ => unreachable!("Chunk rotation out of range"),
     }
     pos
+}
+
+pub fn chunk_pos_flattend_horistonally(chunk_pos: IVec3, chunk_rot: IVec3) -> IVec3 {
+    match chunk_rot {
+        IVec3::X | IVec3::NEG_X => IVec3::new(chunk_pos.x * WORLD_DIAMETER, chunk_pos.y, chunk_pos.z),
+        IVec3::Y => chunk_pos,
+        IVec3::NEG_Y => IVec3::new(chunk_pos.x * 2 * WORLD_DIAMETER, chunk_pos.y, chunk_pos.z),
+        IVec3::Z | IVec3::NEG_Z => IVec3::new(chunk_pos.x, chunk_pos.y, chunk_pos.z * WORLD_DIAMETER),
+        _ => unreachable!("Chunk rotation out of range"),
+    }
 }
