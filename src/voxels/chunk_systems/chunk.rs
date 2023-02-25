@@ -32,7 +32,7 @@ impl Chunk {
             .spawn((
                 PbrBundle {
                     mesh: meshes.add(to_mesh(&voxels, chunk_pos, adjacent_chunks)),
-                    material: materials.add(Color::rgb(0.2, 0.2, 0.7).into()),
+                    material: materials.add(Color::rgb(0.2, 1.0, 0.3).into()),
                     transform: Transform {
                         translation: chunk_pos,
                         ..default()
