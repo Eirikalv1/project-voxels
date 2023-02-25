@@ -39,7 +39,7 @@ fn init(mut commands: Commands) {
     commands.spawn((
         Camera3dBundle {
             transform: Transform {
-                translation: to_world_pos(Vec3::ZERO, IVec3::new(0, -3, 0)),
+                translation: to_world_pos(Vec3::ZERO, IVec3::new(1, 0, 1)),
                 ..default()
             },
             ..default()

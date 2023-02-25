@@ -59,3 +59,35 @@ impl ChunkType {
         }
     }
 }
+
+pub fn get_edge_direction(chunk_rot: IVec3) -> (IVec3, IVec3) {
+    match chunk_rot {
+        IVec3 { x: 1, y: 1, z: 0 } => (IVec3::X, IVec3::Y),
+        IVec3 { x: -1, y: 1, z: 0 } => (IVec3::NEG_X, IVec3::Y),
+        IVec3 { x: 0, y: 1, z: 1 } => (IVec3::Y, IVec3::Z),
+        IVec3 { x: 0, y: 1, z: -1 } => (IVec3::Y, IVec3::NEG_Z),
+        IVec3 { x: 1, y: 0, z: 1 } => (IVec3::X, IVec3::Z),
+        IVec3 { x: 1, y: 0, z: -1 } => (IVec3::X, IVec3::NEG_Z),
+        IVec3 { x: -1, y: 0, z: 1 } => (IVec3::NEG_X, IVec3::Z),
+        IVec3 { x: -1, y: 0, z: -1 } => (IVec3::NEG_X, IVec3::NEG_Z),
+        IVec3 { x: 1, y: -1, z: 0 } => (IVec3::X, IVec3::NEG_Y),
+        IVec3 { x: -1, y: -1, z: 0 } => (IVec3::NEG_X, IVec3::NEG_Y),
+        IVec3 { x: 0, y: -1, z: 1 } => (IVec3::NEG_Y, IVec3::Z),
+        IVec3 { x: 0, y: -1, z: -1 } => (IVec3::NEG_Y, IVec3::NEG_Z),
+        _ => unreachable!("Chunk rotation out of range"),
+    }
+}
+
+pub fn get_corner_direction(chunk_rot: IVec3) -> (IVec3, IVec3, IVec3) {
+    match chunk_rot {
+        IVec3 { x: 1, y: 1, z: 1 } => (IVec3::X, IVec3::Y, IVec3::Z),
+        IVec3 { x: 1, y: 1, z: -1 } => (IVec3::X, IVec3::Y, IVec3::NEG_Z),
+        IVec3 { x: -1, y: 1, z: 1 } => (IVec3::NEG_X, IVec3::Y, IVec3::Z),
+        IVec3 { x: -1, y: 1, z: -1 } => (IVec3::NEG_X, IVec3::Y, IVec3::NEG_Z),
+        IVec3 { x: 1, y: -1, z: 1 } => (IVec3::X, IVec3::NEG_Y, IVec3::Z),
+        IVec3 { x: 1, y: -1, z: -1 } => (IVec3::X, IVec3::NEG_Y, IVec3::NEG_Z),
+        IVec3 { x: -1, y: -1, z: 1 } => (IVec3::NEG_X, IVec3::NEG_Y, IVec3::Z),
+        IVec3 { x: -1, y: -1, z: -1 } => (IVec3::NEG_X, IVec3::NEG_Y, IVec3::NEG_Z),
+        _ => unreachable!("Chunk rotation out of range"),
+    }
+}
