@@ -28,10 +28,10 @@ pub fn rotate_chunk(chunk_rot: IVec3, mut pos: Vec3) -> Vec3 {
 
 pub fn chunk_pos_flattend_horistonally(chunk_pos: IVec3, chunk_rot: IVec3) -> IVec3 {
     match chunk_rot {
-        IVec3::X | IVec3::NEG_X => IVec3::new(chunk_pos.x * WORLD_DIAMETER, chunk_pos.y, chunk_pos.z),
+        IVec3::X | IVec3::NEG_X => IVec3::new(chunk_pos.x * WORLD_DIAMETER + chunk_pos.y, chunk_pos.y, chunk_pos.z),
         IVec3::Y => chunk_pos,
-        IVec3::NEG_Y => IVec3::new(chunk_pos.x * 2 * WORLD_DIAMETER, chunk_pos.y, chunk_pos.z),
-        IVec3::Z | IVec3::NEG_Z => IVec3::new(chunk_pos.x, chunk_pos.y, chunk_pos.z * WORLD_DIAMETER),
+        IVec3::NEG_Y => IVec3::new(chunk_pos.x * 2 * WORLD_DIAMETER + chunk_pos.y, chunk_pos.y, chunk_pos.z),
+        IVec3::Z | IVec3::NEG_Z => IVec3::new(chunk_pos.x, chunk_pos.y, chunk_pos.z * WORLD_DIAMETER + chunk_pos.y),
         _ => unreachable!("Chunk rotation out of range"),
     }
 }
