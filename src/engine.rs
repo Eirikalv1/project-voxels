@@ -13,7 +13,10 @@ pub fn run() {
         .add_plugin(WorldInspectorPlugin)
         .add_plugin(NoCameraPlayerPlugin)
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
-        .insert_resource(AmbientLight {color: Color::WHITE, brightness: 1.0})
+        .insert_resource(AmbientLight {
+            color: Color::WHITE,
+            brightness: 1.0,
+        })
         .insert_resource(ChunkController::default())
         .add_startup_system_set(SystemSet::new().with_system(init))
         .add_system(render_chunks)

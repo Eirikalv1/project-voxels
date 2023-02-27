@@ -2,14 +2,22 @@ use bevy::prelude::*;
 use bevy::render::mesh::Indices;
 use bevy::render::render_resource::PrimitiveTopology;
 
+use super::ambient_occlusion::{get_ao_data, get_neighbouring_voxels, should_flip_quad};
 use super::helper_functions::*;
 use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
+const INDICES_NOT_FLIPPED: [u32; 6] = [0, 1, 2, 2, 3, 0];
+const INDICES_FLIPPED: [u32; 6] = [3, 0, 1, 1, 2, 3];
+
 pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Chunk>; 6]) -> Mesh {
     let mut quad_poses: PositionData = vec![];
     let mut quad_normals: NormalData = vec![];
-    let mut quad_uvs: UvData = vec![];
+    let mut quad_uvs: UVData = vec![];
+    let mut quad_aos: AOData = vec![];
+    let mut quad_indices: IndicesData = vec![];
+
+    let mut indicies_index: u32 = 0;
 
     for (pos1d, voxel_visibility) in voxels.iter().enumerate() {
         for (mut quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
@@ -50,26 +58,41 @@ pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Ch
                 quad_poses.append(&mut quad_pos);
                 quad_normals.append(&mut quad_normal);
                 quad_uvs.append(&mut quad_uv);
+
+                let mut ao_data = get_ao_data(get_neighbouring_voxels(quad, pos3d, voxels));
+
+                if should_flip_quad(&ao_data) {
+                    quad_indices.append(&mut vec![
+                        INDICES_FLIPPED[0] + 4 * indicies_index,
+                        INDICES_FLIPPED[1] + 4 * indicies_index,
+                        INDICES_FLIPPED[2] + 4 * indicies_index,
+                        INDICES_FLIPPED[3] + 4 * indicies_index,
+                        INDICES_FLIPPED[4] + 4 * indicies_index,
+                        INDICES_FLIPPED[5] + 4 * indicies_index,
+                    ]);
+                } else {
+                    quad_indices.append(&mut vec![
+                        INDICES_NOT_FLIPPED[0] + 4 * indicies_index,
+                        INDICES_NOT_FLIPPED[1] + 4 * indicies_index,
+                        INDICES_NOT_FLIPPED[2] + 4 * indicies_index,
+                        INDICES_NOT_FLIPPED[3] + 4 * indicies_index,
+                        INDICES_NOT_FLIPPED[4] + 4 * indicies_index,
+                        INDICES_NOT_FLIPPED[5] + 4 * indicies_index,
+                    ]);
+                }
+
+                quad_aos.append(&mut ao_data);
+
+                indicies_index += 1;
             }
         }
-    }
-
-    let mut indices: Vec<u32> = vec![];
-    for quad in 0..(quad_poses.len() / 4) {
-        indices.append(&mut vec![
-            4 * quad as u32,
-            1 + 4 * quad as u32,
-            2 + 4 * quad as u32,
-            2 + 4 * quad as u32,
-            3 + 4 * quad as u32,
-            4 * quad as u32,
-        ]);
     }
 
     let mut mesh = Mesh::new(PrimitiveTopology::TriangleList);
     mesh.insert_attribute(Mesh::ATTRIBUTE_POSITION, quad_poses);
     mesh.insert_attribute(Mesh::ATTRIBUTE_NORMAL, quad_normals);
     mesh.insert_attribute(Mesh::ATTRIBUTE_UV_0, quad_uvs);
-    mesh.set_indices(Some(Indices::U32(indices)));
+    mesh.insert_attribute(Mesh::ATTRIBUTE_COLOR, quad_aos);
+    mesh.set_indices(Some(Indices::U32(quad_indices)));
     mesh
 }

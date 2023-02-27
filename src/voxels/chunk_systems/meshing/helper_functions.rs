@@ -5,7 +5,9 @@ use crate::voxels::chunk_systems::chunk::*;
 
 pub type PositionData = Vec<[f32; 3]>;
 pub type NormalData = Vec<[f32; 3]>;
-pub type UvData = Vec<[f32; 2]>;
+pub type UVData = Vec<[f32; 2]>;
+pub type AOData = Vec<[f32; 4]>;
+pub type IndicesData = Vec<u32>;
 
 pub fn voxel_to_right(pos3d: Vec3, voxels: &ChunkData) -> bool {
     pos3d.x + 1. < CHUNK_SIZE && voxels.get(to_1d(pos3d.x + 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
@@ -43,7 +45,7 @@ pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
     }
 }
 
-pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, NormalData, UvData) {
+pub fn get_quad_data(quad: usize, pos: Vec3, offset: Vec3) -> (PositionData, NormalData, UVData) {
     let min_x = pos.x + offset.x * CHUNK_SIZE_MINUS_ONE;
     let min_y = pos.y + offset.y * CHUNK_SIZE_MINUS_ONE;
     let min_z = pos.z + offset.z * CHUNK_SIZE_MINUS_ONE;
