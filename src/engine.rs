@@ -1,4 +1,5 @@
 use bevy::prelude::*;
+use bevy_atmosphere::prelude::{AtmospherePlugin, AtmosphereCamera, AtmosphereModel, Gradient};
 use bevy_flycam::{FlyCam, NoCameraPlayerPlugin};
 use bevy_inspector_egui::quick::WorldInspectorPlugin;
 
@@ -10,9 +11,11 @@ use crate::{
 pub fn run() {
     App::new()
         .add_plugins(DefaultPlugins)
+        .add_plugin(AtmospherePlugin)
         .add_plugin(WorldInspectorPlugin)
         .add_plugin(NoCameraPlayerPlugin)
         .insert_resource(ClearColor(Color::rgb(0.2, 0.2, 0.2)))
+        .insert_resource(AtmosphereModel::new(Gradient::default()))
         .insert_resource(AmbientLight {
             color: Color::WHITE,
             brightness: 1.0,
@@ -33,5 +36,6 @@ fn init(mut commands: Commands) {
             ..default()
         },
         FlyCam,
+        AtmosphereCamera::default(),
     ));
 }
