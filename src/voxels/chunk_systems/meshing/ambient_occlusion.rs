@@ -96,7 +96,7 @@ pub fn get_neighbouring_voxels(quad: usize, pos: Vec3, voxels: &ChunkData) -> Vo
     neighbours
 }
 
-const DARK: [f32; 4] = [0.0, 0.0, 0.0, 1.0];
+const DARK: [f32; 4] = [0.3, 0.3, 0.3, 1.0];
 const LIGHT: [f32; 4] = [1.0, 1.0, 1.0, 1.0];
 
 const OPAQUE: VoxelVisibility = VoxelVisibility::Opaque;
