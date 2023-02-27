@@ -5,7 +5,7 @@
 - [x] Chunk unloading
 - [ ] Mutithread meshing
 - [x] Make ChunkController the only inferface between the voxel code and the engine
-- [ ] New block types including a system for handeling it
+- [ ] New block types including a system for handling it
 - [x] Cubic world
 - [ ] Place and break blocks
 - [x] Ambient Occlusion
