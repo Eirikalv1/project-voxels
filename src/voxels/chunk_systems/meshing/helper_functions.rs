@@ -9,38 +9,14 @@ pub type UVData = Vec<[f32; 2]>;
 pub type AOData = Vec<[f32; 4]>;
 pub type IndicesData = Vec<u32>;
 
-pub fn voxel_to_right(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.x + 1. < CHUNK_SIZE && voxels.get(to_1d(pos3d.x + 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
-}
-
-pub fn voxel_to_left(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.x > 0. && voxels.get(to_1d(pos3d.x - 1., pos3d.y, pos3d.z)) == Some(&VoxelVisibility::Opaque)
-}
-
-pub fn voxel_to_top(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.y + 1. < CHUNK_SIZE && voxels.get(to_1d(pos3d.x, pos3d.y + 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
-}
-
-pub fn voxel_to_bottom(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.y > 0. && voxels.get(to_1d(pos3d.x, pos3d.y - 1., pos3d.z)) == Some(&VoxelVisibility::Opaque)
-}
-
-pub fn voxel_to_front(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.z + 1. < CHUNK_SIZE && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z + 1.)) == Some(&VoxelVisibility::Opaque)
-}
-
-pub fn voxel_to_back(pos3d: Vec3, voxels: &ChunkData) -> bool {
-    pos3d.z > 0. && voxels.get(to_1d(pos3d.x, pos3d.y, pos3d.z - 1.)) == Some(&VoxelVisibility::Opaque)
-}
-
 pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
     match quad {
-        0 => !voxel_to_right(pos, voxels),
-        1 => !voxel_to_left(pos, voxels),
-        2 => !voxel_to_top(pos, voxels),
-        3 => !voxel_to_bottom(pos, voxels),
-        4 => !voxel_to_front(pos, voxels),
-        5 => !voxel_to_back(pos, voxels),
+        0 => pos.x + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x + 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty),
+        1 => pos.x > 0. && voxels.get(to_1d(pos.x - 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty),
+        2 => pos.y + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x, pos.y + 1., pos.z)) == Some(&VoxelVisibility::Empty),
+        3 => pos.y > 0. && voxels.get(to_1d(pos.x, pos.y - 1., pos.z)) == Some(&VoxelVisibility::Empty),
+        4 => pos.z + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x, pos.y, pos.z + 1.)) == Some(&VoxelVisibility::Empty),
+        5 => pos.z > 0. && voxels.get(to_1d(pos.x, pos.y, pos.z - 1.)) == Some(&VoxelVisibility::Empty),
         _ => false,
     }
 }
