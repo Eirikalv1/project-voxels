@@ -11,12 +11,21 @@ pub type IndicesData = Vec<u32>;
 
 pub fn quad_is_visible(quad: usize, voxels: &ChunkData, pos: Vec3) -> bool {
     match quad {
-        0 => pos.x + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x + 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty),
-        1 => pos.x > 0. && voxels.get(to_1d(pos.x - 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty),
-        2 => pos.y + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x, pos.y + 1., pos.z)) == Some(&VoxelVisibility::Empty),
-        3 => pos.y > 0. && voxels.get(to_1d(pos.x, pos.y - 1., pos.z)) == Some(&VoxelVisibility::Empty),
-        4 => pos.z + 1. < CHUNK_SIZE && voxels.get(to_1d(pos.x, pos.y, pos.z + 1.)) == Some(&VoxelVisibility::Empty),
-        5 => pos.z > 0. && voxels.get(to_1d(pos.x, pos.y, pos.z - 1.)) == Some(&VoxelVisibility::Empty),
+        0 => {
+            pos.x + 1. < CHUNK_SIZE
+                && voxels.get(Chunk::linearize(pos.x + 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty)
+        }
+        1 => pos.x > 0. && voxels.get(Chunk::linearize(pos.x - 1., pos.y, pos.z)) == Some(&VoxelVisibility::Empty),
+        2 => {
+            pos.y + 1. < CHUNK_SIZE
+                && voxels.get(Chunk::linearize(pos.x, pos.y + 1., pos.z)) == Some(&VoxelVisibility::Empty)
+        }
+        3 => pos.y > 0. && voxels.get(Chunk::linearize(pos.x, pos.y - 1., pos.z)) == Some(&VoxelVisibility::Empty),
+        4 => {
+            pos.z + 1. < CHUNK_SIZE
+                && voxels.get(Chunk::linearize(pos.x, pos.y, pos.z + 1.)) == Some(&VoxelVisibility::Empty)
+        }
+        5 => pos.z > 0. && voxels.get(Chunk::linearize(pos.x, pos.y, pos.z - 1.)) == Some(&VoxelVisibility::Empty),
         _ => false,
     }
 }
@@ -109,12 +118,12 @@ pub fn get_quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
 
 pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
     match quad {
-        0 => to_1d(pos3d.x - CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
-        1 => to_1d(pos3d.x + CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
-        2 => to_1d(pos3d.x, pos3d.y - CHUNK_SIZE_MINUS_ONE, pos3d.z),
-        3 => to_1d(pos3d.x, pos3d.y + CHUNK_SIZE_MINUS_ONE, pos3d.z),
-        4 => to_1d(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE_MINUS_ONE),
-        5 => to_1d(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE_MINUS_ONE),
+        0 => Chunk::linearize(pos3d.x - CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
+        1 => Chunk::linearize(pos3d.x + CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
+        2 => Chunk::linearize(pos3d.x, pos3d.y - CHUNK_SIZE_MINUS_ONE, pos3d.z),
+        3 => Chunk::linearize(pos3d.x, pos3d.y + CHUNK_SIZE_MINUS_ONE, pos3d.z),
+        4 => Chunk::linearize(pos3d.x, pos3d.y, pos3d.z - CHUNK_SIZE_MINUS_ONE),
+        5 => Chunk::linearize(pos3d.x, pos3d.y, pos3d.z + CHUNK_SIZE_MINUS_ONE),
         _ => unreachable!("Quad indexing out of range"),
     }
 }

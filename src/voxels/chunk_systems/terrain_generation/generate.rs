@@ -60,7 +60,7 @@ fn gen_with_noise(mut chunk_pos: IVec3, chunk_rot: IVec3) -> ChunkData {
     chunk_pos = chunk_pos_flattend_horistonally(chunk_pos, chunk_rot);
 
     for pos1d in 0..CHUNK_VOLUME {
-        let pos3d = to_3d(pos1d);
+        let pos3d = Chunk::delinearize(pos1d);
         let world_pos3d = to_world_pos(pos3d, chunk_pos);
 
         let height = (noise.get([world_pos3d.x as f64 / FREQUENCY, 0.0, world_pos3d.z as f64 / FREQUENCY]) * AMPLITUDE
@@ -70,10 +70,11 @@ fn gen_with_noise(mut chunk_pos: IVec3, chunk_rot: IVec3) -> ChunkData {
             let rotated_chunk = rotate_chunk(chunk_rot, Vec3::new(pos3d.x, y as f32, pos3d.z));
 
             if chunk_data
-                .get(to_1d(rotated_chunk.x, rotated_chunk.y, rotated_chunk.z))
+                .get(Chunk::linearize(rotated_chunk.x, rotated_chunk.y, rotated_chunk.z))
                 .is_some()
             {
-                chunk_data[to_1d(rotated_chunk.x, rotated_chunk.y, rotated_chunk.z)] = VoxelVisibility::Opaque;
+                chunk_data[Chunk::linearize(rotated_chunk.x, rotated_chunk.y, rotated_chunk.z)] =
+                    VoxelVisibility::Opaque;
             }
         }
     }

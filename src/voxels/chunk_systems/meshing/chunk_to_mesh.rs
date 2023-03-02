@@ -4,7 +4,6 @@ use bevy::render::render_resource::PrimitiveTopology;
 
 use super::ambient_occlusion::{get_ao_data, get_neighbouring_voxels, should_flip_quad};
 use super::helper_functions::*;
-use crate::utils::*;
 use crate::voxels::chunk_systems::chunk::*;
 
 const INDICES_NOT_FLIPPED: [u32; 6] = [0, 1, 2, 2, 3, 0];
@@ -21,7 +20,7 @@ pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Ch
 
     for (pos1d, voxel_visibility) in voxels.iter().enumerate() {
         for (mut quad, adjacent_chunk) in adjacent_chunks.iter().enumerate() {
-            let mut pos3d = to_3d(pos1d);
+            let mut pos3d = Chunk::delinearize(pos1d);
             let chunk_pos = chunk_pos;
             let mut should_create_quad = false;
 

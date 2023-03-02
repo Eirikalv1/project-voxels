@@ -49,4 +49,15 @@ impl Chunk {
             entity_id,
         }
     }
+    pub fn linearize(x: f32, y: f32, z: f32) -> usize {
+        ((z * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + x) as usize
+    }
+
+    pub fn delinearize(pos: usize) -> Vec3 {
+        Vec3::new(
+            pos as f32 % CHUNK_SIZE,
+            ((pos as f32 / CHUNK_SIZE) as i32 % CHUNK_SIZE as i32) as f32,
+            (pos as f32 / (CHUNK_SIZE * CHUNK_SIZE)) as i32 as f32,
+        )
+    }
 }

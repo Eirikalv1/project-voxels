@@ -1,16 +1,13 @@
 use bevy::prelude::Vec3;
 
-use crate::{
-    utils::to_1d,
-    voxels::chunk_systems::chunk::{ChunkData, VoxelVisibility},
-};
+use crate::voxels::chunk_systems::chunk::{Chunk, ChunkData, VoxelVisibility};
 
 use super::helper_functions::AOData;
 
 pub type VoxelNeighbours = [VoxelVisibility; 8];
 
 fn get_neighbouring_voxel(current_voxel: Vec3, voxel_to_check: Vec3, voxels: &ChunkData) -> VoxelVisibility {
-    if let Some(voxel) = voxels.get(to_1d(
+    if let Some(voxel) = voxels.get(Chunk::linearize(
         current_voxel.x + voxel_to_check.x,
         current_voxel.y + voxel_to_check.y,
         current_voxel.z + voxel_to_check.z,

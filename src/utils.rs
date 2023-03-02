@@ -14,18 +14,6 @@ pub const WORLD_RADIUS: i32 = 3;
 pub const WORLD_RADIUS_MINUS_ONE: i32 = WORLD_RADIUS - 1;
 pub const WORLD_DIAMETER: i32 = 2 * WORLD_RADIUS - 1;
 
-pub fn to_3d(pos: usize) -> Vec3 {
-    Vec3::new(
-        pos as f32 % CHUNK_SIZE,
-        ((pos as f32 / CHUNK_SIZE) as i32 % CHUNK_SIZE as i32) as f32,
-        (pos as f32 / (CHUNK_SIZE * CHUNK_SIZE)) as i32 as f32,
-    )
-}
-
-pub fn to_1d(x: f32, y: f32, z: f32) -> usize {
-    ((z * CHUNK_SIZE * CHUNK_SIZE) + (y * CHUNK_SIZE) + x) as usize
-}
-
 // Chunk position is the position of a chunk relative to other chunks
 pub fn to_chunk_pos(pos: Vec3) -> IVec3 {
     IVec3::new(
