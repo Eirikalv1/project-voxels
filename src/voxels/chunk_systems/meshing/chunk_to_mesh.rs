@@ -37,7 +37,7 @@ pub fn to_mesh(voxels: &ChunkData, chunk_pos: Vec3, adjacent_chunks: [Option<&Ch
                 let adjacent_chunk = adjacent_chunk.unwrap();
                 let adjacent_quad_outside_chunk = get_quad_outside_chunk(quad, pos3d);
 
-                let adjacent_quad_1d = adjacent_quad_to_1d(quad, pos3d);
+                let adjacent_quad_1d = adjacent_quad_linearize(quad, pos3d);
                 if quad_outside_chunk
                     && adjacent_chunk.voxels[adjacent_quad_1d] == VoxelVisibility::Empty
                     && *voxel_visibility == VoxelVisibility::Opaque

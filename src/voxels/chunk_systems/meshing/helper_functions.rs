@@ -116,7 +116,7 @@ pub fn get_quad_outside_chunk(quad: usize, pos3d: Vec3) -> bool {
     }
 }
 
-pub fn adjacent_quad_to_1d(quad: usize, pos3d: Vec3) -> usize {
+pub fn adjacent_quad_linearize(quad: usize, pos3d: Vec3) -> usize {
     match quad {
         0 => Chunk::linearize(pos3d.x - CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
         1 => Chunk::linearize(pos3d.x + CHUNK_SIZE_MINUS_ONE, pos3d.y, pos3d.z),
