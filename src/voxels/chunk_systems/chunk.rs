@@ -12,7 +12,6 @@ pub enum VoxelVisibility {
     Opaque,
 }
 
-#[derive(Component)]
 pub struct Chunk {
     pub voxels: ChunkData,
     pub chunk_pos: Vec3,
@@ -40,7 +39,7 @@ impl Chunk {
                     ..default()
                 },
                 Wireframe,
-                Name::new(format!("Chunk [{chunk_pos}]")),
+                Name::new(format!("Chunk {chunk_pos}")),
             ))
             .id();
 
