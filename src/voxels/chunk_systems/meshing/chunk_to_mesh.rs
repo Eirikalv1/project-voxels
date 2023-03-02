@@ -3,7 +3,7 @@ use bevy::render::mesh::Indices;
 use bevy::render::render_resource::PrimitiveTopology;
 
 use super::ambient_occlusion::{get_ao_data, get_neighbouring_voxels, should_flip_quad};
-use super::helper_functions::*;
+use super::quad::*;
 use crate::voxels::chunk_systems::chunk::*;
 
 const INDICES_NOT_FLIPPED: [u32; 6] = [0, 1, 2, 2, 3, 0];

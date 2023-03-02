@@ -2,7 +2,7 @@ use bevy::prelude::Vec3;
 
 use crate::voxels::chunk_systems::chunk::{Chunk, ChunkData, VoxelVisibility};
 
-use super::helper_functions::AOData;
+use super::quad::AOData;
 
 pub type VoxelNeighbours = [VoxelVisibility; 8];
 
